@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safar Travel · Admin Panel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#5a4a1e;
+  --dark:#080807;--surface:#0f0e0a;--surface2:#161410;--surface3:#1c1a13;
+  --text:#F0EAD6;--text-dim:#7a7060;--text-muted:#4a4535;
+  --border:rgba(201,168,76,0.12);--border-strong:rgba(201,168,76,0.25);
+  --green:#25D366;--red:#e05555;--orange:#e0954a;
+}
+html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:100;flex-direction:column;gap:0;}
+#loginScreen::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(201,168,76,0.07) 0%,transparent 60%);pointer-events:none;}
+.login-box{background:var(--surface);border:1px solid var(--border-strong);padding:40px 36px;width:340px;position:relative;}
+.login-logo{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.25em;color:var(--gold);text-align:center;text-transform:uppercase;margin-bottom:6px;}
+.login-title{font-family:'Cinzel',serif;font-size:22px;color:var(--text);text-align:center;margin-bottom:4px;}
+.login-sub{font-size:11px;color:var(--text-dim);text-align:center;letter-spacing:.06em;margin-bottom:32px;}
+.login-field{margin-bottom:14px;}
+.login-field label{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
+.login-field input{width:100%;background:#0a0908;border:1px solid var(--border);color:var(--text);padding:10px 12px;font-size:13px;font-family:'Lato',sans-serif;outline:none;transition:border-color .2s;}
+.login-field input:focus{border-color:var(--gold-dim);}
+.login-btn{width:100%;background:var(--gold);border:none;color:#0a0a0a;padding:12px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;cursor:pointer;margin-top:8px;transition:all .2s;}
+.login-btn:hover{background:var(--gold-light);}
+.login-err{color:var(--red);font-size:11px;text-align:center;margin-top:10px;min-height:16px;}
+
+/* ── MAIN LAYOUT ── */
+#app{display:none;height:100%;flex-direction:column;}
+#app.visible{display:flex;}
+
+/* TOP BAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.topbar-logo{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;}
+.topbar-sub{font-size:10px;color:var(--text-dim);letter-spacing:.07em;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.badge{background:var(--gold);color:#0a0a0a;font-size:9px;font-family:'Cinzel',serif;padding:3px 8px;letter-spacing:.08em;}
+.badge.green{background:var(--green);}
+.topbar-logout{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:10px;padding:5px 10px;cursor:pointer;font-family:'Lato',sans-serif;transition:all .2s;}
+.topbar-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* MAIN CONTENT */
+.main{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sidebar-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sidebar-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+.filter-row{display:flex;gap:5px;}
+.filter-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:8.5px;padding:3px 7px;cursor:pointer;font-family:'Lato',sans-serif;letter-spacing:.06em;transition:all .2s;}
+.filter-btn.active{border-color:var(--gold);color:var(--gold);}
+.conv-list{flex:1;overflow-y:auto;}
+.conv-list::-webkit-scrollbar{width:2px;}
+.conv-list::-webkit-scrollbar-thumb{background:var(--gold-dim);}
+.conv-item{padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative;}
+.conv-item:hover{background:var(--surface2);}
+.conv-item.active{background:var(--surface2);border-left:2px solid var(--gold);}
+.conv-item.unread::after{content:'';position:absolute;top:14px;right:14px;width:7px;height:7px;background:var(--gold);border-radius:50%;}
+.conv-id{font-size:10px;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:.08em;margin-bottom:3px;}
+.conv-preview{font-size:11.5px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;}
+.conv-time{font-size:9px;color:var(--text-muted);margin-top:4px;}
+.conv-status{display:inline-block;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;margin-top:5px;}
+.conv-status.active{background:rgba(201,168,76,0.1);color:var(--gold);}
+.conv-status.waiting{background:rgba(37,211,102,0.1);color:var(--green);}
+.conv-status.closed{background:rgba(255,255,255,0.04);color:var(--text-muted);}
+
+/* CHAT PANEL */
+.chat-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.chat-panel-header{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.client-info{flex:1;}
+.client-id{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:.1em;}
+.client-meta{font-size:10px;color:var(--text-dim);margin-top:2px;}
+.action-btns{display:flex;gap:8px;}
+.act-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:10px;padding:5px 10px;cursor:pointer;font-family:'Lato',sans-serif;letter-spacing:.05em;transition:all .2s;}
+.act-btn:hover{border-color:var(--gold);color:var(--gold);}
+.act-btn.danger:hover{border-color:var(--red);color:var(--red);}
+#convMessages{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:12px;}
+#convMessages::-webkit-scrollbar{width:2px;}
+#convMessages::-webkit-scrollbar-thumb{background:var(--gold-dim);}
+.cmsg{display:flex;flex-direction:column;max-width:75%;}
+.cmsg.user{align-self:flex-end;align-items:flex-end;}
+.cmsg.bot,.cmsg.admin{align-self:flex-start;align-items:flex-start;}
+.cmsg-label{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;}
+.cmsg.user .cmsg-label{color:var(--gold-dim);}
+.cmsg.admin .cmsg-label{color:var(--green);}
+.cmsg-bubble{padding:9px 13px;font-size:12.5px;line-height:1.7;}
+.cmsg.user .cmsg-bubble{background:#1a1712;border:1px solid var(--border);border-right:2px solid var(--gold);}
+.cmsg.bot .cmsg-bubble{background:#100f0a;border:1px solid var(--border);border-left:2px solid var(--gold);}
+.cmsg.admin .cmsg-bubble{background:#0a160d;border:1px solid rgba(37,211,102,0.15);border-left:2px solid var(--green);}
+
+/* REPLY BOX */
+.reply-area{border-top:1px solid var(--border);padding:12px 16px;background:var(--surface);flex-shrink:0;}
+.reply-label{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+.reply-row{display:flex;gap:8px;align-items:flex-end;}
+#adminReply{flex:1;background:#0a0908;border:1px solid var(--border);color:var(--text);font-family:'Lato',sans-serif;font-size:13px;padding:9px 12px;resize:none;min-height:40px;max-height:120px;outline:none;transition:border-color .2s;border-radius:0;}
+#adminReply:focus{border-color:var(--gold-dim);}
+#adminReply::placeholder{color:var(--text-muted);}
+#sendReplyBtn{background:var(--gold);border:none;color:#0a0a0a;padding:10px 18px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;cursor:pointer;white-space:nowrap;transition:all .2s;}
+#sendReplyBtn:hover{background:var(--gold-light);}
+#sendReplyBtn:disabled{background:var(--gold-dim);cursor:not-allowed;}
+
+/* EMPTY STATE */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);}
+.empty-icon{font-size:36px;opacity:.4;}
+.empty-text{font-size:12px;letter-spacing:.08em;}
+
+/* STATS BAR */
+.stats-bar{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface2);flex-shrink:0;}
+.stat{flex:1;padding:10px 16px;border-right:1px solid var(--border);text-align:center;}
+.stat:last-child{border-right:none;}
+.stat-val{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);}
+.stat-label{font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+
+@media(max-width:600px){
+  .sidebar{width:100%;position:absolute;z-index:10;}
+  .chat-panel{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">✦ Safar Travel</div>
+    <div class="login-title">Admin Panel</div>
+    <div class="login-sub">Secure access · Consultants only</div>
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@safar.travel" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">ENTER PANEL</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div>
+      <div class="topbar-logo">✦ Safar Travel</div>
+      <div class="topbar-sub">Admin Console · Real-time</div>
+    </div>
+    <div class="topbar-right">
+      <span class="badge" id="totalBadge">0 conversations</span>
+      <span class="badge green" id="activeBadge">0 active</span>
+      <button class="topbar-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val" id="statTotal">0</div><div class="stat-label">Total Chats</div></div>
+    <div class="stat"><div class="stat-val" id="statActive">0</div><div class="stat-label">Active</div></div>
+    <div class="stat"><div class="stat-val" id="statHuman">0</div><div class="stat-label">Need Human</div></div>
+    <div class="stat"><div class="stat-val" id="statToday">0</div><div class="stat-label">Today</div></div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Conversations</span>
+        <div class="filter-row">
+          <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+          <button class="filter-btn" onclick="setFilter('waiting_human',this)">🔴 Human</button>
+          <button class="filter-btn" onclick="setFilter('active',this)">Active</button>
+        </div>
+      </div>
+      <div class="conv-list" id="convList">
+        <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:11px;">Loading conversations…</div>
+      </div>
+    </div>
+
+    <div class="chat-panel" id="chatPanel">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">✦</div>
+        <div class="empty-text">Select a conversation to view</div>
+      </div>
+      <div id="activeConv" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+        <div class="chat-panel-header">
+          <div class="client-info">
+            <div class="client-id" id="convTitle">—</div>
+            <div class="client-meta" id="convMeta">—</div>
+          </div>
+          <div class="action-btns">
+            <button class="act-btn" onclick="openWhatsApp()">💬 WhatsApp</button>
+            <button class="act-btn danger" onclick="closeConversation()">Close</button>
+          </div>
+        </div>
+        <div id="convMessages"></div>
+        <div class="reply-area">
+          <div class="reply-label">Reply as Safar Team</div>
+          <div class="reply-row">
+            <textarea id="adminReply" placeholder="Type your reply to the client…" rows="1"></textarea>
+            <button id="sendReplyBtn" onclick="sendAdminReply()">SEND ›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, onSnapshot, doc, updateDoc, serverTimestamp, query, orderBy, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBnmsBg4oWAMiNSB1KoKaNw1dEirQEGwnc",
+  authDomain: "safar-tours-1-1.firebaseapp.com",
+  projectId: "safar-tours-1-1",
+  storageBucket: "safar-tours-1-1.firebasestorage.app",
+  messagingSenderId: "1089755853609",
+  appId: "1:1089755853609:web:97cf0c4918a3bbbe87fd38",
+  measurementId: "G-FK6N3PCVV5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const WA_NUMBER = '21656977718';
+let allConversations = [];
+let currentFilter = 'all';
+let selectedConvId = null;
+let convUnsubscribe = null;
+
+// ── AUTH ──
+window.doLogin = async function() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  err.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = 'Invalid credentials. Please try again.';
+  }
+};
+
+window.doLogout = async function() {
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  if(user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    loadConversations();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('app').classList.remove('visible');
+  }
+});
+
+// ── LOAD CONVERSATIONS ──
+function loadConversations() {
+  const q = collection(db, 'conversations');
+  onSnapshot(q, snap => {
+    allConversations = [];
+    snap.forEach(d => allConversations.push({id:d.id, ...d.data()}));
+    allConversations.sort((a,b) => {
+      const at = a.lastMessageAt?.toMillis?.()||0;
+      const bt = b.lastMessageAt?.toMillis?.()||0;
+      return bt - at;
+    });
+    updateStats();
+    renderList();
+    if(selectedConvId) {
+      const conv = allConversations.find(c=>c.id===selectedConvId);
+      if(conv) renderMessages(conv);
+    }
+  });
+}
+
+function updateStats() {
+  const total = allConversations.length;
+  const active = allConversations.filter(c=>c.status==='active').length;
+  const human = allConversations.filter(c=>c.humanRequested&&c.status!=='closed').length;
+  const today = allConversations.filter(c=>{
+    const t = c.startedAt?.toMillis?.();
+    if(!t) return false;
+    const d = new Date(t);
+    const now = new Date();
+    return d.toDateString()===now.toDateString();
+  }).length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statHuman').textContent = human;
+  document.getElementById('statToday').textContent = today;
+  document.getElementById('totalBadge').textContent = `${total} conversations`;
+  document.getElementById('activeBadge').textContent = `${human} need human`;
+}
+
+window.setFilter = function(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+};
+
+function renderList() {
+  const list = document.getElementById('convList');
+  let convs = allConversations;
+  if(currentFilter !== 'all') convs = convs.filter(c=>c.status===currentFilter);
+  if(convs.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:11px;">No conversations found</div>';
+    return;
+  }
+  list.innerHTML = '';
+  convs.forEach(conv => {
+    const div = document.createElement('div');
+    div.className = 'conv-item' + (conv.id===selectedConvId?' active':'') + (conv.humanRequested&&conv.status!=='closed'?' unread':'');
+    const time = conv.lastMessageAt?.toDate ? conv.lastMessageAt.toDate().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '—';
+    const statusClass = conv.humanRequested ? 'waiting' : conv.status === 'closed' ? 'closed' : 'active';
+    const statusLabel = conv.humanRequested ? '🔴 Human requested' : conv.status === 'closed' ? 'Closed' : 'AI active';
+    const shortId = conv.sessionId?.split('_')[1]?.substring(0,6)||conv.id.substring(0,8);
+    div.innerHTML = `
+      <div class="conv-id">CLIENT #${shortId}</div>
+      <div class="conv-preview">${conv.lastMessage||'New conversation'}</div>
+      <div class="conv-time">${time} · ${conv.lang?.toUpperCase()||'EN'}</div>
+      <span class="conv-status ${statusClass}">${statusLabel}</span>`;
+    div.onclick = () => selectConversation(conv.id);
+    list.appendChild(div);
+  });
+}
+
+function selectConversation(id) {
+  selectedConvId = id;
+  const conv = allConversations.find(c=>c.id===id);
+  if(!conv) return;
+  document.getElementById('emptyState').style.display = 'none';
+  const activeDiv = document.getElementById('activeConv');
+  activeDiv.style.display = 'flex';
+  activeDiv.style.flexDirection = 'column';
+  activeDiv.style.flex = '1';
+  activeDiv.style.overflow = 'hidden';
+  const shortId = conv.sessionId?.split('_')[1]?.substring(0,6)||id.substring(0,8);
+  document.getElementById('convTitle').textContent = `Client #${shortId}`;
+  const started = conv.startedAt?.toDate ? conv.startedAt.toDate().toLocaleString() : 'Unknown';
+  document.getElementById('convMeta').textContent = `Started: ${started} · Lang: ${conv.lang?.toUpperCase()||'EN'} · Status: ${conv.status||'active'}`;
+  renderMessages(conv);
+  renderList();
+}
+
+function renderMessages(conv) {
+  const container = document.getElementById('convMessages');
+  container.innerHTML = '';
+  const msgs = conv.messages || [];
+  if(msgs.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:11px;padding:20px;">No messages yet</div>';
+    return;
+  }
+  msgs.forEach(msg => {
+    const div = document.createElement('div');
+    div.className = `cmsg ${msg.role==='user'?'user':msg.role==='admin'?'admin':'bot'}`;
+    const label = msg.role==='user'?'Client':msg.role==='admin'?'Safar Team':'Layla (AI)';
+    div.innerHTML = `<div class="cmsg-label">${label}</div><div class="cmsg-bubble">${(msg.text||'').replace(/\n/g,'<br>')}</div>`;
+    container.appendChild(div);
+  });
+  container.scrollTop = container.scrollHeight;
+  // Show admin reply if any
+  if(conv.adminReply && conv.adminReplyRead) {
+    // already in messages ideally
+  }
+}
+
+// ── ADMIN REPLY ──
+window.sendAdminReply = async function() {
+  const text = document.getElementById('adminReply').value.trim();
+  if(!text||!selectedConvId) return;
+  const btn = document.getElementById('sendReplyBtn');
+  btn.disabled = true;
+  try {
+    const conv = allConversations.find(c=>c.id===selectedConvId);
+    const msgs = conv?.messages||[];
+    msgs.push({role:'admin',text,timestamp:new Date().toISOString()});
+    await updateDoc(doc(db,'conversations',selectedConvId),{
+      adminReply: text,
+      adminReplyRead: false,
+      messages: msgs,
+      lastMessage: `[Admin] ${text.substring(0,80)}`,
+      lastMessageAt: serverTimestamp(),
+      status: 'active'
+    });
+    document.getElementById('adminReply').value = '';
+    document.getElementById('adminReply').style.height = 'auto';
+  } catch(e) { alert('Failed to send reply. Check Firestore permissions.'); }
+  btn.disabled = false;
+};
+
+window.openWhatsApp = function() {
+  const msg = encodeURIComponent('Hello! This is the Safar Travel team following up on your inquiry.');
+  window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`,'_blank');
+};
+
+window.closeConversation = async function() {
+  if(!selectedConvId) return;
+  if(!confirm('Mark this conversation as closed?')) return;
+  await updateDoc(doc(db,'conversations',selectedConvId),{status:'closed',closedAt:serverTimestamp()});
+};
+
+// ── TEXTAREA AUTO-RESIZE ──
+document.getElementById('adminReply').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+document.getElementById('adminReply').addEventListener('keydown', e => {
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendAdminReply();}
+});
+
+// ── LOGIN ENTER KEY ──
+document.getElementById('loginPass').addEventListener('keydown', e => {
+  if(e.key==='Enter') window.doLogin();
+});
+</script>
+</body>
+</html>

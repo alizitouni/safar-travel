@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Safar Travel · AI Concierge</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#7a6228;--dark:#0d0c08;--surface:#141209;--text:#F0EAD6;--text-dim:#7a7060;--border:rgba(201,168,76,0.15);}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--dark);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;display:flex;flex-direction:column;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 0%,rgba(201,168,76,0.06) 0%,transparent 50%),radial-gradient(ellipse at 85% 100%,rgba(201,168,76,0.04) 0%,transparent 50%);pointer-events:none;z-index:0;}
+header{position:relative;z-index:20;border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;background:rgba(8,8,5,0.97);flex-shrink:0;}
+.logo{width:34px;height:34px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:rgba(201,168,76,0.05);}
+.header-info h1{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;}
+.header-info p{font-size:9.5px;color:var(--text-dim);letter-spacing:.07em;}
+.header-actions{margin-left:auto;display:flex;gap:7px;align-items:center;}
+.lang-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:9px;padding:4px 7px;cursor:pointer;font-family:'Lato',sans-serif;letter-spacing:.08em;transition:all .2s;}
+.lang-btn.active{border-color:var(--gold);color:var(--gold);}
+.status-dot{width:6px;height:6px;background:#4caf7a;border-radius:50%;box-shadow:0 0 6px #4caf7a;animation:pulse 2.5s ease-in-out infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+#chat{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+#chat::-webkit-scrollbar{width:2px;}
+#chat::-webkit-scrollbar-thumb{background:var(--gold-dim);}
+.msg{display:flex;flex-direction:column;max-width:88%;animation:fadeUp .3s ease forwards;opacity:0;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.bot{align-self:flex-start;align-items:flex-start;}
+.msg.admin-reply{align-self:flex-start;align-items:flex-start;}
+.msg-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;padding:0 3px;}
+.msg.user .msg-label{color:var(--gold-dim);}
+.msg.admin-reply .msg-label{color:#25D366;}
+.bubble{padding:10px 14px;font-size:13px;line-height:1.75;}
+.msg.user .bubble{background:#181510;border:1px solid var(--border);border-right:2px solid var(--gold);}
+.msg.bot .bubble{background:#100f0a;border:1px solid var(--border);border-left:2px solid var(--gold);}
+.msg.admin-reply .bubble{background:#0a1a0f;border:1px solid rgba(37,211,102,0.2);border-left:2px solid #25D366;}
+.typing .bubble{display:flex;gap:4px;align-items:center;padding:13px 16px;}
+.dot{width:4px;height:4px;background:var(--gold);border-radius:50%;animation:blink 1.2s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.85)}40%{opacity:1;transform:scale(1)}}
+.qr-row{display:flex;flex-wrap:wrap;gap:6px;max-width:92%;animation:fadeUp .35s ease .1s forwards;opacity:0;}
+.qr-btn{background:transparent;border:1px solid var(--border);color:var(--gold-light);padding:5px 10px;font-size:11px;font-family:'Lato',sans-serif;letter-spacing:.04em;cursor:pointer;transition:all .2s;}
+.qr-btn:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+.pkg-scroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;animation:fadeUp .35s ease .1s forwards;opacity:0;}
+.pkg-row{display:flex;gap:9px;width:max-content;}
+.pkg-card{background:linear-gradient(145deg,#161410,#0f0e09);border:1px solid var(--border);border-top:2px solid var(--gold);padding:13px 12px 11px;width:155px;cursor:pointer;transition:all .22s;position:relative;flex-shrink:0;}
+.pkg-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.pkg-badge{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;}
+.pkg-icon{font-size:20px;margin-bottom:6px;display:block;}
+.pkg-name{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:4px;}
+.pkg-dest{font-size:9.5px;color:var(--text-dim);margin-bottom:6px;}
+.pkg-price{font-size:10px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:4px;}
+.pkg-nights{font-size:9px;color:var(--text-dim);margin-bottom:8px;}
+.dest-photo{width:100%;height:90px;object-fit:cover;border:1px solid var(--border);margin-bottom:8px;display:block;}
+.pkg-select{width:100%;padding:5px;background:transparent;border:1px solid var(--border);color:var(--gold);font-size:9px;letter-spacing:.09em;font-family:'Cinzel',serif;cursor:pointer;transition:all .2s;}
+.pkg-select:hover{background:rgba(201,168,76,0.12);border-color:var(--gold);}
+.human-banner{background:rgba(201,168,76,0.05);border:1px solid var(--border);border-left:2px solid var(--gold);padding:10px 14px;font-size:12px;line-height:1.7;animation:fadeUp .3s ease forwards;opacity:0;}
+.human-banner strong{color:var(--gold);font-weight:400;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;}
+.wa-link{display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.25);color:#25D366;padding:6px 12px;font-size:11px;font-family:'Cinzel',serif;letter-spacing:.08em;cursor:pointer;text-decoration:none;transition:all .2s;}
+.wa-link:hover{background:rgba(37,211,102,0.15);}
+footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:10px 14px;background:rgba(6,6,4,0.98);flex-shrink:0;}
+.input-row{display:flex;gap:8px;align-items:flex-end;}
+#userInput{flex:1;background:#111009;border:1px solid var(--border);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;font-size:13px;padding:9px 12px;resize:none;min-height:40px;max-height:100px;outline:none;line-height:1.5;transition:border-color .2s;border-radius:0;}
+#userInput:focus{border-color:var(--gold-dim);}
+#userInput::placeholder{color:var(--text-dim);}
+.btn-row{display:flex;gap:6px;flex-shrink:0;}
+#sendBtn{background:var(--gold);border:none;color:#0a0a0a;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;}
+#sendBtn:hover{background:var(--gold-light);}
+#sendBtn:disabled{background:var(--gold-dim);cursor:not-allowed;}
+#humanBtn{background:transparent;border:1px solid var(--border);color:var(--text-dim);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s;}
+#humanBtn:hover,#humanBtn.active{border-color:#25D366;color:#25D366;}
+.footer-note{text-align:center;font-size:8.5px;color:var(--text-dim);margin-top:6px;letter-spacing:.07em;}
+.session-id{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">✦</div>
+  <div class="header-info">
+    <h1>Safar Travel</h1>
+    <p id="headerSub">Luxury Halal Concierge · AI Powered</p>
+  </div>
+  <div class="header-actions">
+    <button class="lang-btn active" id="langEN" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="langFR" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" id="langAR" onclick="setLang('ar')">AR</button>
+    <div class="status-dot"></div>
+  </div>
+</header>
+<div id="chat"></div>
+<footer>
+  <div class="input-row">
+    <textarea id="userInput" rows="1" placeholder="Tell me about your dream journey…"></textarea>
+    <div class="btn-row">
+      <button id="humanBtn" title="Request human agent" onclick="requestHuman()">👤</button>
+      <button id="sendBtn" onclick="sendMessage(userInput.value.trim())">➤</button>
+    </div>
+  </div>
+  <p class="footer-note">✦ &nbsp; SAFAR TRAVEL &nbsp;·&nbsp; PRIVATE LUXURY EXPERIENCES &nbsp;·&nbsp; <span style="color:#25D366">● LIVE</span></p>
+</footer>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, serverTimestamp, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── FIREBASE CONFIG ──
+const firebaseConfig = {
+  apiKey: "AIzaSyBnmsBg4oWAMiNSB1KoKaNw1dEirQEGwnc",
+  authDomain: "safar-tours-1-1.firebaseapp.com",
+  projectId: "safar-tours-1-1",
+  storageBucket: "safar-tours-1-1.firebasestorage.app",
+  messagingSenderId: "1089755853609",
+  appId: "1:1089755853609:web:97cf0c4918a3bbbe87fd38",
+  measurementId: "G-FK6N3PCVV5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ── SESSION ──
+let sessionId = localStorage.getItem('safar_session');
+if (!sessionId) {
+  sessionId = 'client_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+  localStorage.setItem('safar_session', sessionId);
+}
+let sessionDocRef = null;
+let adminRepliesUnsubscribe = null;
+const WA_NUMBER = '21656977718';
+const WA_BASE = `https://wa.me/${WA_NUMBER}`;
+let currentLang = 'en';
+let humanMode = false;
+const history = [];
+const chat = document.getElementById('chat');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+// ── LANGUAGE ──
+const LANG = {
+  en:{welcome:`Marhaba, and welcome to Safar Travel. ✦\n\nI'm Layla, your personal concierge. I craft extraordinary halal travel experiences — from Moroccan riads to Maldivian overwater villas.\n\nWho will you be travelling with, and what kind of experience are you dreaming of?`,qr:['💑 Honeymoon trip','👨‍👩‍👧 Family holiday','🌍 Cultural discovery','🏖️ Beach & relaxation','✨ See all packages'],placeholder:'Tell me about your dream journey…',agentLabel:'Layla · Safar Concierge',youLabel:'You',adminLabel:'Safar Team',humanBanner:'<strong>Human Agent Requested</strong><br>Our team will join shortly. I\'m still here to help in the meantime.',waLabel:'💬 &nbsp; WhatsApp Us Directly'},
+  fr:{welcome:`Marhaba, bienvenue chez Safar Travel. ✦\n\nJe suis Layla, votre concierge personnelle. Je crée des expériences de voyage halal extraordinaires.\n\nAvec qui voyagerez-vous et quel type d'expérience rêvez-vous?`,qr:['💑 Voyage de noces','👨‍👩‍👧 Vacances famille','🌍 Découverte culturelle','🏖️ Plage & détente','✨ Voir les forfaits'],placeholder:'Parlez-moi de votre voyage idéal…',agentLabel:'Layla · Concierge Safar',youLabel:'Vous',adminLabel:'Équipe Safar',humanBanner:'<strong>Agent Humain Demandé</strong><br>Notre équipe vous rejoindra bientôt.',waLabel:'💬 &nbsp; WhatsApp'},
+  ar:{welcome:`مرحباً بكم في سفر تراڤل ✦\n\nأنا ليلى، مستشارتكم الشخصية. أساعدكم في اكتشاف تجارب سفر فاخرة وحلال.\n\nمع من ستسافر؟ وما نوع التجربة التي تحلم بها؟`,qr:['💑 رحلة شهر العسل','👨‍👩‍👧 إجازة عائلية','🌍 استكشاف ثقافي','🏖️ الشاطئ والراحة','✨ جميع الباقات'],placeholder:'أخبرني عن رحلة أحلامك…',agentLabel:'ليلى · كونسيرج سفر',youLabel:'أنت',adminLabel:'فريق سفر',humanBanner:'<strong>طلب وكيل</strong><br>سيتواصل معك فريقنا قريباً.',waLabel:'💬 &nbsp; واتساب'}
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('lang'+lang.toUpperCase()).classList.add('active');
+  userInput.placeholder = LANG[lang].placeholder;
+  document.body.dir = lang==='ar'?'rtl':'ltr';
+}
+
+function detectLang(){const n=navigator.language||'en';if(n.startsWith('ar'))return 'ar';if(n.startsWith('fr'))return 'fr';return 'en';}
+
+// ── PACKAGES ──
+const PACKAGES=[
+  {id:'morocco',badge:'Most Popular',icon:'🕌',name:'Imperial Morocco',dest:'Marrakech · Fes · Chefchaouen',nights:7,price:'€2,200 – €3,500 / person',tags:['culture','family','honeymoon'],photo:'https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=400&q=80'},
+  {id:'istanbul',badge:'Bestseller',icon:'🌙',name:'Golden Istanbul',dest:'Istanbul · Cappadocia',nights:6,price:'€1,800 – €2,800 / person',tags:['culture','honeymoon','couple'],photo:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=400&q=80'},
+  {id:'maldives',badge:'Ultra Luxury',icon:'🌊',name:'Maldives Escape',dest:'North Malé · Baa Atoll',nights:7,price:'€5,500 – €9,000 / person',tags:['honeymoon','luxury','beach'],photo:'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=400&q=80'},
+  {id:'andalusia',badge:'Cultural',icon:'🏰',name:'Andalusia Dream',dest:'Seville · Granada · Córdoba',nights:8,price:'€2,000 – €3,200 / person',tags:['culture','history','family'],photo:'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&q=80'},
+  {id:'dubai',badge:'VIP',icon:'✨',name:'Dubai Elite',dest:'Dubai · Abu Dhabi',nights:5,price:'€2,800 – €4,500 / person',tags:['luxury','shopping','family'],photo:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80'},
+  {id:'malaysia',badge:'Family Pick',icon:'🌿',name:'Malaysia Explorer',dest:'KL · Langkawi · Penang',nights:10,price:'€2,500 – €3,800 / person',tags:['family','adventure','beach'],photo:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=80'},
+];
+
+function buildSystem(){
+  const pkgList=PACKAGES.map(p=>`• ${p.name} (${p.dest}, ${p.nights} nights, ${p.price})`).join('\n');
+  const langInstr=currentLang==='fr'?'Respond entirely in French.':currentLang==='ar'?'Respond entirely in Arabic.':'Respond in English.';
+  return `You are Layla, AI concierge for Safar Travel — a luxury halal travel agency. Warm, refined, knowledgeable.\n\n${langInstr}\n\nPACKAGES (land only, per person, excl. flights):\n${pkgList}\n\nAPPROACH:\n1. First reply: ask 2–3 qualifying questions: travel type, interests, duration/budget.\n2. Recommend 2–3 matching packages by name with specific reasons. Quote price ranges.\n3. If they select: ask group size, dates, special needs. Describe the trip vividly.\n4. To finalize inquiry: collect name, destination, dates, group size, budget, special requests. Tell them a consultant will contact them within 24h.\n5. Custom trips: create bespoke proposal.\n\nHALAL: Weave in halal-certified dining, prayer facilities, modesty-friendly environments naturally.\nTONE: Elegant, personal, under 110 words unless describing itinerary. Never robotic. Use ✦ occasionally.`;
+}
+
+// ── DOM HELPERS ──
+function addMsg(role,text,animated=true){
+  const t=LANG[currentLang];
+  const wrap=document.createElement('div');
+  wrap.className=`msg ${role}`;
+  if(!animated)wrap.style.animationDuration='0s';
+  const label=document.createElement('div');label.className='msg-label';
+  label.textContent=role==='user'?t.youLabel:role==='admin-reply'?t.adminLabel:t.agentLabel;
+  const bubble=document.createElement('div');bubble.className='bubble';
+  bubble.innerHTML=text.replace(/\n/g,'<br>');
+  wrap.appendChild(label);wrap.appendChild(bubble);
+  chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
+  return wrap;
+}
+
+function addTyping(){
+  const t=LANG[currentLang];
+  const wrap=document.createElement('div');wrap.className='msg bot typing';
+  wrap.innerHTML=`<div class="msg-label">${t.agentLabel}</div><div class="bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;return wrap;
+}
+
+function addQuickReplies(items){
+  const row=document.createElement('div');row.className='qr-row';
+  items.forEach(t=>{const btn=document.createElement('button');btn.className='qr-btn';btn.textContent=t;btn.onclick=()=>{row.remove();sendMessage(t);};row.appendChild(btn);});
+  chat.appendChild(row);chat.scrollTop=chat.scrollHeight;
+}
+
+function addPackageCards(pkgs){
+  const scroll=document.createElement('div');scroll.className='pkg-scroll';
+  const row=document.createElement('div');row.className='pkg-row';
+  pkgs.forEach(p=>{
+    const card=document.createElement('div');card.className='pkg-card';
+    card.innerHTML=`<div class="pkg-badge">${p.badge}</div><img class="dest-photo" src="${p.photo}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"><span class="pkg-icon">${p.icon}</span><div class="pkg-name">${p.name}</div><div class="pkg-dest">${p.dest}</div><div class="pkg-price">${p.price}</div><div class="pkg-nights">${p.nights} nights · land only</div><button class="pkg-select">SELECT ›</button>`;
+    card.querySelector('.pkg-select').onclick=()=>{scroll.remove();sendMessage(`I'm interested in the ${p.name} package — ${p.dest}, ${p.nights} nights. Price: ${p.price}.`);};
+    row.appendChild(card);
+  });
+  scroll.appendChild(row);chat.appendChild(scroll);chat.scrollTop=chat.scrollHeight;
+}
+
+function addHumanBanner(){
+  const t=LANG[currentLang];
+  const banner=document.createElement('div');banner.className='human-banner';
+  const waMsg=encodeURIComponent('Hello! I was chatting with the Safar Travel AI concierge and would like to speak with a consultant.');
+  banner.innerHTML=`${t.humanBanner}<br><br><a class="wa-link" href="${WA_BASE}?text=${waMsg}" target="_blank" rel="noopener">${t.waLabel}</a>`;
+  chat.appendChild(banner);chat.scrollTop=chat.scrollHeight;
+}
+
+// ── PACKAGE DETECTION ──
+function detectPackages(text,userText){
+  const combo=(text+' '+userText).toLowerCase();
+  const matched=[];
+  PACKAGES.forEach(p=>{if(combo.includes(p.name.toLowerCase())||combo.includes(p.dest.split('·')[0].trim().toLowerCase()))matched.push(p);});
+  if(matched.length===0&&(combo.includes('recommend')||combo.includes('package')||combo.includes('suggest')||combo.includes('recommande')||combo.includes('أقترح'))){
+    const tagMap={honeymoon:['honeymoon','romantic','anniversary','noces','شهر العسل'],family:['family','children','kids','famille','عائلة'],beach:['beach','island','plage','شاطئ'],culture:['culture','history','ثقافة'],luxury:['luxury','vip','luxe','فاخر']};
+    const matchedTags=new Set();
+    Object.entries(tagMap).forEach(([tag,kws])=>{if(kws.some(kw=>combo.includes(kw)))matchedTags.add(tag);});
+    PACKAGES.forEach(p=>{if(p.tags.some(t=>matchedTags.has(t))&&matched.length<3&&!matched.find(m=>m.id===p.id))matched.push(p);});
+  }
+  return matched.slice(0,3);
+}
+
+// ── FIREBASE: SAVE SESSION ──
+async function initSession(){
+  try {
+    const docRef = await addDoc(collection(db,'conversations'),{
+      sessionId, startedAt:serverTimestamp(), status:'active', lang:currentLang,
+      lastMessage:'', lastMessageAt:serverTimestamp(), humanRequested:false, messages:[]
+    });
+    sessionDocRef = docRef;
+    listenForAdminReplies();
+  } catch(e){console.error('Firebase init error:',e);}
+}
+
+async function saveMessage(role,text){
+  if(!sessionDocRef) return;
+  try {
+    await updateDoc(sessionDocRef,{
+      lastMessage: text.substring(0,100),
+      lastMessageAt: serverTimestamp(),
+      [`messages_${Date.now()}`]: {role,text,timestamp:new Date().toISOString()}
+    });
+  } catch(e){}
+}
+
+async function saveFullHistory(){
+  if(!sessionDocRef) return;
+  try {
+    const msgs = history.map(h=>({role:h.role,text:h.content}));
+    await updateDoc(sessionDocRef,{messages:msgs, lastMessageAt:serverTimestamp()});
+  } catch(e){}
+}
+
+// ── LISTEN FOR ADMIN REPLIES ──
+function listenForAdminReplies(){
+  if(!sessionDocRef) return;
+  onSnapshot(sessionDocRef, (snap)=>{
+    const data = snap.data();
+    if(data && data.adminReply && data.adminReplyRead !== true){
+      // Show admin reply
+      addMsg('admin-reply', data.adminReply);
+      // Mark as read
+      updateDoc(sessionDocRef,{adminReplyRead:true});
+    }
+    if(data && data.humanRequested && !humanMode){
+      humanMode=true;
+    }
+  });
+}
+
+// ── HUMAN REQUEST ──
+async function requestHuman(){
+  if(humanMode) return;
+  humanMode=true;
+  document.getElementById('humanBtn').classList.add('active');
+  addHumanBanner();
+  if(sessionDocRef){
+    await updateDoc(sessionDocRef,{humanRequested:true, status:'waiting_human', lastMessageAt:serverTimestamp()});
+  }
+}
+window.requestHuman = requestHuman;
+
+// ── SEND ──
+async function sendMessage(text){
+  if(!text.trim()||sendBtn.disabled) return;
+  sendBtn.disabled=true;
+  userInput.value='';userInput.style.height='auto';
+  addMsg('user',text);
+  history.push({role:'user',content:text});
+  await saveFullHistory();
+  const typing=addTyping();
+  try {
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSystem(),messages:history})
+    });
+    const data=await res.json();
+    const reply=data.content?.map(b=>b.text||'').join('')||'I apologize — something went wrong.';
+    typing.remove();
+    addMsg('bot',reply);
+    history.push({role:'assistant',content:reply});
+    await saveFullHistory();
+    const toShow=detectPackages(reply,text);
+    if(toShow.length>0)setTimeout(()=>addPackageCards(toShow),200);
+    if(reply.toLowerCase().includes('consultant will contact')||reply.toLowerCase().includes('24h')||reply.toLowerCase().includes('whatsapp')){
+      const waMsg=encodeURIComponent('Hello! I just submitted my Safar Travel inquiry via the AI concierge.');
+      setTimeout(()=>{
+        const a=document.createElement('a');a.href=`${WA_BASE}?text=${waMsg}`;a.target='_blank';a.rel='noopener';a.className='wa-link';
+        a.style.cssText='display:inline-flex;align-items:center;gap:6px;margin-top:6px;';
+        a.innerHTML='💬 &nbsp; Message us on WhatsApp';
+        const wrap=document.createElement('div');wrap.style.cssText='animation:fadeUp .3s ease forwards;opacity:0;';
+        wrap.appendChild(a);chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
+      },400);
+    }
+  } catch(e){typing.remove();addMsg('bot','I apologize — please try again shortly. ✦');}
+  sendBtn.disabled=false;userInput.focus();
+}
+window.sendMessage = sendMessage;
+
+// ── INPUT ──
+userInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage(userInput.value.trim());}});
+userInput.addEventListener('input',()=>{userInput.style.height='auto';userInput.style.height=Math.min(userInput.scrollHeight,100)+'px';});
+
+// ── INIT ──
+window.addEventListener('load',async()=>{
+  const lang=detectLang();setLang(lang);
+  await initSession();
+  setTimeout(()=>{
+    const t=LANG[currentLang];
+    addMsg('bot',t.welcome);
+    setTimeout(()=>addQuickReplies(t.qr),350);
+  },300);
+});
+</script>
+</body>
+</html>
