@@ -189,6 +189,8 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
+.curr-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;font-size:10px;font-family:'Cinzel',serif;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.curr-btn.active,.curr-btn:hover{border-color:var(--gold);color:var(--gold);}
 /* ── MOBILE ── */
 @media(max-width:900px){
   nav{padding:14px 20px;}
@@ -264,6 +266,22 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
   </div>
 </div>
 
+<!-- CURRENCY BAR -->
+<div style="background:#0a0908;border-bottom:1px solid var(--border);padding:10px 48px;">
+  <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">View prices in:</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;" id="currencyBtns">
+      <button class="curr-btn active" onclick="setHomeCurrency('EUR','€',1,this)">EUR €</button>
+      <button class="curr-btn" onclick="setHomeCurrency('GBP','£',0.86,this)">GBP £</button>
+      <button class="curr-btn" onclick="setHomeCurrency('USD','$',1.08,this)">USD $</button>
+      <button class="curr-btn" onclick="setHomeCurrency('TND','DT',3.35,this)">TND</button>
+      <button class="curr-btn" onclick="setHomeCurrency('AED','AED',3.97,this)">AED</button>
+      <button class="curr-btn" onclick="setHomeCurrency('SAR','SAR',4.05,this)">SAR</button>
+    </div>
+    <span style="margin-left:auto;font-size:11px;color:var(--text-dim);font-family:'Cinzel',serif;" id="currencyNote">Prices shown in EUR</span>
+  </div>
+</div>
+
 <!-- ABOUT -->
 <section id="about">
   <div class="about-grid">
@@ -309,7 +327,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
   </div>
   <div class="pkg-grid reveal">
 
-    <div class="pkg-cell" onclick="openChat('Morocco')">
+    <div class="pkg-cell" onclick="location.href='morocco.html'">
       <img class="pkg-img" src="https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=600&q=80" alt="Morocco" loading="lazy">
       <div class="pkg-overlay"></div>
       <div class="pkg-info">
@@ -331,7 +349,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
       </div>
     </div>
 
-    <div class="pkg-cell" onclick="openChat('Istanbul')">
+    <div class="pkg-cell" onclick="location.href='istanbul.html'">
       <img class="pkg-img" src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80" alt="Istanbul" loading="lazy">
       <div class="pkg-overlay"></div>
       <div class="pkg-info">
@@ -353,7 +371,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
       </div>
     </div>
 
-    <div class="pkg-cell" onclick="openChat('Maldives')">
+    <div class="pkg-cell" onclick="location.href='maldives.html'">
       <img class="pkg-img" src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=600&q=80" alt="Maldives" loading="lazy">
       <div class="pkg-overlay"></div>
       <div class="pkg-info">
@@ -375,7 +393,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
       </div>
     </div>
 
-    <div class="pkg-cell" onclick="openChat('Andalusia')">
+    <div class="pkg-cell" onclick="location.href='andalusia.html'">
       <img class="pkg-img" src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=600&q=80" alt="Andalusia" loading="lazy">
       <div class="pkg-overlay"></div>
       <div class="pkg-info">
@@ -397,7 +415,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
       </div>
     </div>
 
-    <div class="pkg-cell" onclick="openChat('Dubai')">
+    <div class="pkg-cell" onclick="location.href='dubai.html'">
       <img class="pkg-img" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80" alt="Dubai" loading="lazy">
       <div class="pkg-overlay"></div>
       <div class="pkg-info">
@@ -419,7 +437,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
       </div>
     </div>
 
-    <div class="pkg-cell" onclick="openChat('Malaysia')">
+    <div class="pkg-cell" onclick="location.href='malaysia.html'">
       <img class="pkg-img" src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=600&q=80" alt="Malaysia" loading="lazy">
       <div class="pkg-overlay"></div>
       <div class="pkg-info">
@@ -637,6 +655,29 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
 </div>
 
 <script>
+// ── CURRENCY ──
+const PKG_PRICES = {EUR:['€2,200','€1,800','€5,500','€2,000','€2,800','€2,500']};
+const BASE = [2200,1800,5500,2000,2800,2500];
+let homeCurrency = {code:'EUR',symbol:'€',rate:1};
+
+function setHomeCurrency(code,symbol,rate,btn){
+  homeCurrency={code,symbol,rate};
+  document.querySelectorAll('.curr-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('currencyNote').textContent=`Prices shown in ${code}`;
+  document.querySelectorAll('.pkg-price-tag').forEach((el,i)=>{
+    if(BASE[i]) el.textContent=`From ${symbol}${Math.round(BASE[i]*rate).toLocaleString()} / person · ${[7,6,7,8,5,10][i]} nights`;
+  });
+}
+
+function autoHomeCurrency(){
+  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+  if(tz.includes('London')||tz.includes('Dublin')){const b=document.querySelector('.curr-btn:nth-child(2)');if(b)setHomeCurrency('GBP','£',0.86,b);}
+  else if(tz.includes('Riyadh')||tz.includes('Kuwait')){const b=document.querySelector('.curr-btn:nth-child(6)');if(b)setHomeCurrency('SAR','SAR',4.05,b);}
+  else if(tz.includes('Dubai')||tz.includes('Abu_Dhabi')){const b=document.querySelector('.curr-btn:nth-child(5)');if(b)setHomeCurrency('AED','AED',3.97,b);}
+  else if(tz.includes('Tunis')||tz.includes('Casablanca')||tz.includes('Algiers')){const b=document.querySelector('.curr-btn:nth-child(4)');if(b)setHomeCurrency('TND','DT',3.35,b);}
+}
+
 // ── NAV SCROLL ──
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
@@ -668,6 +709,10 @@ function openChat(topic){
 }
 
 // ── CONTACT FORM ──
+window.addEventListener('load',()=>{
+  autoHomeCurrency();
+});
+
 function submitForm(){
   const fname=document.getElementById('fname').value.trim();
   const email=document.getElementById('femail').value.trim();

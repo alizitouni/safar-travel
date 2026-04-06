@@ -68,8 +68,13 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:1
 #sendBtn{background:var(--gold);border:none;color:#0a0a0a;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;}
 #sendBtn:hover{background:var(--gold-light);}
 #sendBtn:disabled{background:var(--gold-dim);cursor:not-allowed;}
+.human-btn-wrap{position:relative;flex-shrink:0;}
 #humanBtn{background:transparent;border:1px solid var(--border);color:var(--text-dim);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s;}
 #humanBtn:hover,#humanBtn.active{border-color:#25D366;color:#25D366;}
+#humanBtn.active{background:rgba(37,211,102,0.1);}
+.human-tooltip{position:absolute;bottom:48px;right:0;background:rgba(8,8,6,0.95);border:1px solid rgba(37,211,102,0.3);color:#25D366;padding:5px 10px;font-size:10px;font-family:'Cinzel',sans-serif;letter-spacing:.08em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;border-radius:0;}
+.human-btn-wrap:hover .human-tooltip{opacity:1;}
+#humanBtn.active + .human-tooltip{content:'AI paused';}
 .footer-note{text-align:center;font-size:8.5px;color:var(--text-dim);margin-top:6px;letter-spacing:.07em;}
 .session-id{display:none;}
 </style>
@@ -93,7 +98,10 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:1
   <div class="input-row">
     <textarea id="userInput" rows="1" placeholder="Tell me about your dream journey…"></textarea>
     <div class="btn-row">
-      <button id="humanBtn" title="Request human agent" onclick="requestHuman()">👤</button>
+      <div class="human-btn-wrap">
+        <button id="humanBtn" onclick="requestHuman()">👤</button>
+        <div class="human-tooltip" id="humanTooltip">Chat with a human</div>
+      </div>
       <button id="sendBtn" onclick="sendMessage(userInput.value.trim())">➤</button>
     </div>
   </div>
@@ -282,7 +290,12 @@ function listenForAdminReplies(){
 async function requestHuman(){
   if(humanMode) return;
   humanMode=true;
+  sendBtn.disabled=true;
+  sendBtn.style.opacity='0.4';
+  sendBtn.title='AI paused — human agent requested';
   document.getElementById('humanBtn').classList.add('active');
+  document.getElementById('humanTooltip').textContent='AI paused · Human requested';
+  userInput.placeholder='Type a message for our team…';
   addHumanBanner();
   if(sessionDocRef){
     await updateDoc(sessionDocRef,{humanRequested:true, status:'waiting_human', lastMessageAt:serverTimestamp()});
@@ -293,6 +306,15 @@ window.requestHuman = requestHuman;
 // ── SEND ──
 async function sendMessage(text){
   if(!text.trim()||sendBtn.disabled) return;
+  // If human mode, just save message to Firebase without AI reply
+  if(humanMode){
+    addMsg('user',text);
+    history.push({role:'user',content:text});
+    await saveFullHistory();
+    userInput.value='';userInput.style.height='auto';
+    userInput.focus();
+    return;
+  }
   sendBtn.disabled=true;
   userInput.value='';userInput.style.height='auto';
   addMsg('user',text);
@@ -300,7 +322,7 @@ async function sendMessage(text){
   await saveFullHistory();
   const typing=addTyping();
   try {
-    const res=await fetch('https://empty-bush-afa7.aloulouzitouni588.workers.dev/',{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSystem(),messages:history})
     });
