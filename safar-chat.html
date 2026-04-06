@@ -300,7 +300,7 @@ async function sendMessage(text){
   await saveFullHistory();
   const typing=addTyping();
   try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('https://empty-bush-afa7.aloulouzitouni588.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSystem(),messages:history})
     });
