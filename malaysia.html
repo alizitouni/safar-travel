@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malaysia Explorer · Safar Travel</title>
+<meta name="description" content="10 nights luxury halal Malaysia tour — Kuala Lumpur, Langkawi, Penang. Jungle resorts, island hopping, halal street food. From €2,500 per person.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#8a6f32;--dark:#080806;--dark2:#0d0c08;--surface:#111009;--text:#F0EAD6;--text-dim:#9a8f7a;--text-muted:#5a5040;--border:rgba(201,168,76,0.13);--border-strong:rgba(201,168,76,0.25);}
+html{scroll-behavior:smooth;}body{background:var(--dark);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--gold-dim);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,6,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cinzel',serif;font-size:15px;letter-spacing:.2em;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:28px;height:28px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.nav-back{color:var(--text-dim);font-size:11px;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;transition:color .2s;}
+.nav-back:hover{color:var(--gold);}
+@media(max-width:600px){nav{padding:12px 16px;}}
+.pkg-hero{height:70vh;min-height:480px;position:relative;display:flex;align-items:flex-end;padding:60px 48px;}
+.pkg-hero-bg{position:absolute;inset:0;overflow:hidden;}
+.pkg-hero-bg img{width:100%;height:100%;object-fit:cover;display:block;}
+.pkg-hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,6,0.95) 0%,rgba(8,8,6,0.4) 50%,rgba(8,8,6,0.2) 100%);}
+.pkg-hero-content{position:relative;z-index:2;max-width:700px;}
+.pkg-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
+.pkg-hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,72px);font-weight:300;line-height:1.05;color:var(--text);margin-bottom:12px;}
+.pkg-hero-title em{font-style:italic;color:var(--gold);}
+.pkg-hero-sub{font-size:14px;color:var(--text-dim);letter-spacing:.05em;margin-bottom:24px;}
+.pkg-hero-tags{display:flex;gap:10px;flex-wrap:wrap;}
+.pkg-tag{border:1px solid var(--border-strong);padding:5px 12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+@media(max-width:600px){.pkg-hero{padding:40px 16px;height:60vh;}}
+.quick-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 48px;}
+.quick-bar-inner{max-width:1100px;margin:0 auto;display:flex;overflow-x:auto;}
+.quick-item{padding:20px 32px;border-right:1px solid var(--border);flex-shrink:0;text-align:center;}
+.quick-item:last-child{border-right:none;}
+.quick-val{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);display:block;}
+.quick-label{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-top:4px;display:block;}
+@media(max-width:600px){.quick-bar{padding:0 16px;}.quick-item{padding:16px 20px;}}
+.currency-bar{background:var(--dark2);border-bottom:1px solid var(--border);padding:12px 48px;}
+.currency-bar-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.currency-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+.currency-btns{display:flex;gap:6px;}
+.currency-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;font-size:10px;font-family:'Cinzel',serif;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.currency-btn.active{border-color:var(--gold);color:var(--gold);}
+.currency-result{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-left:auto;}
+@media(max-width:600px){.currency-bar{padding:10px 16px;}.currency-result{margin-left:0;width:100%;}}
+.pkg-main{max-width:1100px;margin:0 auto;padding:60px 48px;display:grid;grid-template-columns:1fr 340px;gap:60px;align-items:start;}
+@media(max-width:900px){.pkg-main{grid-template-columns:1fr;padding:40px 16px;gap:40px;}}
+.section-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;}
+.section-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,38px);font-weight:300;color:var(--text);margin-bottom:16px;line-height:1.2;}
+.section-heading em{font-style:italic;color:var(--gold);}
+.body-text{font-size:14px;color:var(--text-dim);line-height:1.9;margin-bottom:16px;}
+.content-block{margin-bottom:56px;}
+.gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:200px 200px;gap:4px;}
+.gallery img{width:100%;height:100%;object-fit:cover;display:block;}
+.gallery img:first-child{grid-row:1/3;}
+@media(max-width:600px){.gallery{grid-template-columns:1fr;grid-template-rows:auto;}.gallery img:first-child{grid-row:auto;height:220px;}.gallery img{height:160px;}}
+.itinerary{display:flex;flex-direction:column;}
+.itin-day{display:flex;position:relative;}
+.itin-day::before{content:'';position:absolute;left:19px;top:40px;bottom:-20px;width:1px;background:var(--border);}
+.itin-day:last-child::before{display:none;}
+.itin-marker{width:40px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding-top:4px;}
+.itin-dot{width:10px;height:10px;border:1px solid var(--gold);background:var(--dark);border-radius:50%;}
+.itin-content{padding:0 0 36px 20px;flex:1;}
+.itin-day-label{font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.itin-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text);margin-bottom:8px;}
+.itin-body{font-size:13px;color:var(--text-dim);line-height:1.8;}
+.itin-highlights{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
+.itin-tag{background:rgba(201,168,76,0.06);border:1px solid var(--border);padding:3px 10px;font-size:10px;color:var(--text-muted);}
+.includes-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.include-item{display:flex;gap:10px;align-items:flex-start;padding:14px;border:1px solid var(--border);}
+.include-icon{font-size:18px;flex-shrink:0;}
+.include-text{font-size:12.5px;color:var(--text-dim);line-height:1.6;}
+.include-text strong{display:block;color:var(--text);font-weight:400;font-size:11px;letter-spacing:.06em;margin-bottom:3px;font-family:'Cinzel',serif;}
+@media(max-width:600px){.includes-grid{grid-template-columns:1fr;}}
+.sidebar{position:sticky;top:80px;}
+.booking-card{background:var(--surface);border:1px solid var(--border-strong);padding:28px 24px;}
+.booking-card-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;text-align:center;}
+.price-from{text-align:center;margin-bottom:20px;}
+.price-amount{font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--gold);line-height:1;}
+.price-note{font-size:10px;color:var(--text-muted);letter-spacing:.08em;margin-top:4px;}
+.price-converted{font-size:12px;color:var(--text-dim);margin-top:6px;font-family:'Cinzel',serif;}
+.booking-divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+.booking-detail{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.booking-detail-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+.booking-detail-val{font-size:12px;color:var(--text-dim);}
+.booking-btn{width:100%;background:var(--gold);border:none;color:var(--dark);padding:14px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;cursor:pointer;text-transform:uppercase;transition:all .2s;margin-top:8px;text-decoration:none;display:block;text-align:center;}
+.booking-btn:hover{background:var(--gold-light);}
+.booking-btn-outline{width:100%;background:transparent;border:1px solid var(--border-strong);color:var(--text-dim);padding:12px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;cursor:pointer;text-transform:uppercase;transition:all .2s;margin-top:8px;text-decoration:none;display:block;text-align:center;}
+.booking-btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.halal-badges{margin-top:20px;display:flex;flex-direction:column;gap:8px;}
+.halal-badge{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);}
+.halal-badge::before{content:'✓';color:var(--gold);font-size:12px;flex-shrink:0;}
+.pkg-footer{background:var(--dark2);border-top:1px solid var(--border);padding:32px 48px;}
+.pkg-footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.pkg-footer-copy{font-size:11px;color:var(--text-muted);}
+.pkg-footer-links{display:flex;gap:20px;}
+.pkg-footer-links a{font-size:11px;color:var(--text-muted);text-decoration:none;}
+.pkg-footer-links a:hover{color:var(--gold);}
+@media(max-width:600px){.pkg-footer{padding:24px 16px;}.pkg-footer-inner{flex-direction:column;text-align:center;}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">✦</div>Safar Travel</a>
+  <a href="index.html#packages" class="nav-back">← All Packages</a>
+</nav>
+<div class="pkg-hero">
+  <div class="pkg-hero-bg">
+    <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1600&q=75" alt="Malaysia Explorer" loading="eager">
+  </div>
+  <div class="pkg-hero-content">
+    <div class="pkg-eyebrow">✦ &nbsp; Family Pick Package &nbsp; ✦</div>
+    <h1 class="pkg-hero-title">Malaysia <em>Explorer</em></h1>
+    <p class="pkg-hero-sub">Kuala Lumpur · Langkawi · Penang &nbsp;·&nbsp; 10 Nights</p>
+    <div class="pkg-hero-tags">
+      <span class="pkg-tag">👨‍👩‍👧 Family Favourite</span>
+      <span class="pkg-tag">🌿 Jungle Resort</span>
+      <span class="pkg-tag">🏖️ Island Hopping</span>
+      <span class="pkg-tag">🍜 Halal Food Capital</span>
+    </div>
+  </div>
+</div>
+<div class="quick-bar">
+  <div class="quick-bar-inner">
+    <div class="quick-item"><span class="quick-val">10</span><span class="quick-label">Nights</span></div>
+    <div class="quick-item"><span class="quick-val">3</span><span class="quick-label">Destinations</span></div>
+    <div class="quick-item"><span class="quick-val">5★</span><span class="quick-label">Resorts</span></div>
+    <div class="quick-item"><span class="quick-val">100%</span><span class="quick-label">Halal</span></div>
+    <div class="quick-item"><span class="quick-val" id="priceDisplay">€2,500</span><span class="quick-label">From / Person</span></div>
+  </div>
+</div>
+<div class="currency-bar">
+  <div class="currency-bar-inner">
+    <span class="currency-label">View price in:</span>
+    <div class="currency-btns">
+      <button class="currency-btn active" onclick="setCurrency('EUR','€',1)">EUR €</button>
+      <button class="currency-btn" onclick="setCurrency('GBP','£',0.86)">GBP £</button>
+      <button class="currency-btn" onclick="setCurrency('USD','$',1.08)">USD $</button>
+      <button class="currency-btn" onclick="setCurrency('TND','DT',3.35)">TND</button>
+      <button class="currency-btn" onclick="setCurrency('AED','AED',3.97)">AED</button>
+      <button class="currency-btn" onclick="setCurrency('SAR','SAR',4.05)">SAR</button>
+    </div>
+    <span class="currency-result" id="currencyResult">Starting from €2,500 per person</span>
+  </div>
+</div>
+<div class="pkg-main">
+  <div class="pkg-content">
+    <div class="content-block reveal">
+      <div class="section-label">Overview</div>
+      <h2 class="section-heading">Southeast Asia's <em>Muslim Paradise</em></h2>
+      <p class="body-text">Malaysia is arguably the world's best destination for Muslim travellers. With over 60% of the population Muslim, halal food is not a speciality — it is simply the norm. Mosques are beautiful and everywhere. The culture is deeply Islamic yet completely cosmopolitan, blending Malay, Chinese, and Indian influences into one of the world's most fascinating and delicious food cultures.</p>
+      <p class="body-text">This 10-night journey moves from the futuristic skyline of Kuala Lumpur to the lush rainforest and pristine beaches of Langkawi, ending in the food paradise of Penang. Extraordinary for families — children are welcomed everywhere, the activities are endlessly varied, and the country is supremely safe and easy to navigate.</p>
+    </div>
+    <div class="content-block reveal">
+      <div class="section-label">Gallery</div>
+      <div class="gallery">
+        <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=75" alt="Malaysia resort" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&q=75" alt="Kuala Lumpur Petronas" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=600&q=75" alt="Langkawi beach" loading="lazy">
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <div class="section-label">Day by Day</div>
+      <h2 class="section-heading">Your <em>Itinerary</em></h2>
+      <div class="itinerary">
+        <div class="itin-day">
+          <div class="itin-marker"><div class="itin-dot"></div></div>
+          <div class="itin-content">
+            <div class="itin-day-label">Day 1–3</div>
+            <div class="itin-title">Kuala Lumpur — City of Towers</div>
+            <div class="itin-body">Arrive in Kuala Lumpur and check into your luxury city hotel. Private guided city tour: the iconic Petronas Twin Towers with VIP Sky Bridge access, the ornate Masjid Jamek mosque at the confluence of two rivers, the vibrant Batu Caves Hindu temple (fascinating cultural contrast), and the colourful streets of Chinatown. Full day dedicated to Malaysia's food culture — private halal food tour through KL's legendary hawker centres and upscale halal restaurants, sampling nasi lemak, satay, laksa, and roti canai with an expert guide.</div>
+            <div class="itin-highlights"><span class="itin-tag">Petronas Towers VIP</span><span class="itin-tag">Masjid Jamek</span><span class="itin-tag">Halal food tour</span><span class="itin-tag">Batu Caves</span></div>
+          </div>
+        </div>
+        <div class="itin-day">
+          <div class="itin-marker"><div class="itin-dot"></div></div>
+          <div class="itin-content">
+            <div class="itin-day-label">Day 4–7</div>
+            <div class="itin-title">Langkawi — Jungle & Beaches</div>
+            <div class="itin-body">Fly to Langkawi — a duty-free island archipelago of 99 islands coated in ancient rainforest and fringed by turquoise sea. Check into a luxury jungle or beachfront resort. Island hopping by private boat to the most beautiful coves and deserted beaches. Cable car to the top of Mount Mat Cincang for panoramic views across the archipelago. Mangrove kayaking through ancient jungle rivers. Snorkelling in crystal-clear waters. Malaysian cooking class preparing traditional halal dishes.</div>
+            <div class="itin-highlights"><span class="itin-tag">Island hopping</span><span class="itin-tag">Cable car</span><span class="itin-tag">Mangrove kayaking</span><span class="itin-tag">Cooking class</span></div>
+          </div>
+        </div>
+        <div class="itin-day">
+          <div class="itin-marker"><div class="itin-dot"></div></div>
+          <div class="itin-content">
+            <div class="itin-day-label">Day 8–10</div>
+            <div class="itin-title">Penang — Food Capital of Asia</div>
+            <div class="itin-body">Ferry or fly to Penang — a UNESCO-listed island city often called the food capital of Asia. The historic core of George Town is a labyrinth of Chinese shophouses, colonial buildings, and street art. Private halal food tour with a local guide — char kway teow, assam laksa, nasi kandar — visiting the legendary hawker stalls that have been cooking the same dishes for generations. Penang Hill funicular for panoramic island views. Day trip to Penang National Park for jungle trekking and secluded beach.</div>
+            <div class="itin-highlights"><span class="itin-tag">George Town UNESCO</span><span class="itin-tag">Halal food tour</span><span class="itin-tag">Penang Hill</span><span class="itin-tag">National Park</span></div>
+          </div>
+        </div>
+        <div class="itin-day">
+          <div class="itin-marker"><div class="itin-dot"></div></div>
+          <div class="itin-content">
+            <div class="itin-day-label">Day 11</div>
+            <div class="itin-title">Departure</div>
+            <div class="itin-body">Final morning in Penang — last breakfast of roti canai and teh tarik at a legendary mamak restaurant before private transfer to Penang International Airport for your departure flight. Malaysia will stay with you long after you leave.</div>
+            <div class="itin-highlights"><span class="itin-tag">Farewell breakfast</span><span class="itin-tag">Private transfer</span><span class="itin-tag">Departure</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <div class="section-label">Package Includes</div>
+      <h2 class="section-heading">Everything <em>Taken Care Of</em></h2>
+      <div class="includes-grid">
+        <div class="include-item"><div class="include-icon">🏨</div><div class="include-text"><strong>Luxury Resorts</strong>10 nights — city hotel in KL, jungle/beach resort in Langkawi, boutique hotel in Penang</div></div>
+        <div class="include-item"><div class="include-icon">✈️</div><div class="include-text"><strong>Domestic Flights</strong>KL–Langkawi and Langkawi–Penang domestic flights included</div></div>
+        <div class="include-item"><div class="include-icon">🍜</div><div class="include-text"><strong>Halal Dining</strong>Daily breakfast + private halal food tours in KL and Penang with expert guide</div></div>
+        <div class="include-item"><div class="include-icon">🚤</div><div class="include-text"><strong>Island Hopping</strong>Private boat charter for island hopping in Langkawi's archipelago</div></div>
+        <div class="include-item"><div class="include-icon">👤</div><div class="include-text"><strong>Expert Guides</strong>Local private guides specialising in halal food and culture in KL and Penang</div></div>
+        <div class="include-item"><div class="include-icon">🧑‍🍳</div><div class="include-text"><strong>Cooking Class</strong>Traditional Malaysian halal cooking class in Langkawi — take the recipes home</div></div>
+        <div class="include-item"><div class="include-icon">🎫</div><div class="include-text"><strong>All Entrance Fees</strong>Petronas Sky Bridge, cable car, Penang Hill funicular, and all monuments included</div></div>
+        <div class="include-item"><div class="include-icon">🧭</div><div class="include-text"><strong>Prayer Facilities</strong>Mosques accessible everywhere in Malaysia. Prayer rooms in every mall and airport.</div></div>
+      </div>
+      <p style="margin-top:16px;font-size:12px;color:var(--text-muted);">* International flights not included. No visa required for many nationalities visiting Malaysia (30 days free).</p>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="booking-card reveal">
+      <div class="booking-card-title">Book This Package</div>
+      <div class="price-from">
+        <div class="price-amount" id="sidebarPrice">€2,500</div>
+        <div class="price-note">per person · land only</div>
+        <div class="price-converted" id="sidebarConverted"></div>
+      </div>
+      <hr class="booking-divider">
+      <div class="booking-detail"><span class="booking-detail-label">Duration</span><span class="booking-detail-val">10 nights / 11 days</span></div>
+      <div class="booking-detail"><span class="booking-detail-label">Destinations</span><span class="booking-detail-val">KL, Langkawi, Penang</span></div>
+      <div class="booking-detail"><span class="booking-detail-label">Group Size</span><span class="booking-detail-val">2 – 14 people</span></div>
+      <div class="booking-detail"><span class="booking-detail-label">Best Season</span><span class="booking-detail-val">Nov–Feb (dry season)</span></div>
+      <div class="booking-detail"><span class="booking-detail-label">Ideal For</span><span class="booking-detail-val">Families & groups</span></div>
+      <hr class="booking-divider">
+      <a href="https://wa.me/21656977718?text=I'd%20like%20to%20book%20the%20Malaysia%20Explorer%20package%20(10%20nights)" target="_blank" class="booking-btn">Book via WhatsApp ›</a>
+      <a href="index.html#contact" class="booking-btn-outline">Request Custom Quote</a>
+      <div class="halal-badges">
+        <div class="halal-badge">Halal food everywhere by default</div>
+        <div class="halal-badge">Mosques in every neighbourhood</div>
+        <div class="halal-badge">Prayer rooms in malls & airports</div>
+        <div class="halal-badge">Muslim-majority country</div>
+        <div class="halal-badge">Excellent for children & families</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pkg-footer">
+  <div class="pkg-footer-inner">
+    <div class="pkg-footer-copy">© 2025 Safar Travel · All rights reserved</div>
+    <div class="pkg-footer-links">
+      <a href="index.html">Home</a><a href="index.html#packages">All Packages</a><a href="index.html#contact">Contact</a>
+    </div>
+  </div>
+</div>
+<script>
+const basePrice=2500;let currentSymbol='€';let currentRate=1;let currentCode='EUR';
+function setCurrency(code,symbol,rate){currentCode=code;currentSymbol=symbol;currentRate=rate;document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updatePrices();}
+function updatePrices(){const c=Math.round(basePrice*currentRate);document.getElementById('priceDisplay').textContent=currentSymbol+c.toLocaleString();document.getElementById('currencyResult').textContent=`Starting from ${currentSymbol}${c.toLocaleString()} per person`;document.getElementById('sidebarPrice').textContent=currentSymbol+c.toLocaleString();document.getElementById('sidebarConverted').textContent=currentCode!=='EUR'?`≈ €${basePrice.toLocaleString()} EUR`:''}
+function autoDetect(){const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';if(tz.includes('London'))setCurrencyAuto('GBP','£',0.86,1);else if(tz.includes('Riyadh')||tz.includes('Kuwait'))setCurrencyAuto('SAR','SAR',4.05,5);else if(tz.includes('Dubai')||tz.includes('Abu_Dhabi'))setCurrencyAuto('AED','AED',3.97,4);else if(tz.includes('Tunis')||tz.includes('Casablanca'))setCurrencyAuto('TND','DT',3.35,3);}
+function setCurrencyAuto(code,symbol,rate,idx){currentCode=code;currentSymbol=symbol;currentRate=rate;const btns=document.querySelectorAll('.currency-btn');btns.forEach(b=>b.classList.remove('active'));if(btns[idx])btns[idx].classList.add('active');updatePrices();}
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+window.addEventListener('load',autoDetect);
+</script>
+</body>
+</html>
