@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Packages · Safar Travel</title>
+<meta name="description" content="Luxury halal travel packages — Morocco, Istanbul, Maldives, Andalusia, Dubai, Malaysia. Curated journeys for discerning Muslim travellers.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#8a6f32;--dark:#080806;--dark2:#0d0c08;--surface:#111009;--surface2:#171510;--text:#F0EAD6;--text-dim:#9a8f7a;--text-muted:#5a5040;--border:rgba(201,168,76,0.13);--border-strong:rgba(201,168,76,0.25);}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--gold-dim);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,6,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cinzel',serif;font-size:15px;letter-spacing:.2em;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:28px;height:28px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.nav-back{color:var(--text-dim);font-size:11px;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;transition:color .2s;}
+.nav-back:hover{color:var(--gold);}
+@media(max-width:600px){nav{padding:12px 16px;}}
+
+/* HERO */
+.pkg-hero{padding:140px 48px 80px;text-align:center;position:relative;}
+.pkg-hero::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.06) 0%,transparent 55%);pointer-events:none;z-index:0;}
+.pkg-hero-inner{position:relative;z-index:1;}
+.pkg-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;}
+.pkg-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,64px);font-weight:300;color:var(--text);line-height:1.1;margin-bottom:14px;}
+.pkg-title em{font-style:italic;color:var(--gold);}
+.pkg-sub{font-size:14px;color:var(--text-dim);max-width:480px;margin:0 auto;line-height:1.8;}
+@media(max-width:600px){.pkg-hero{padding:100px 20px 60px;}}
+
+/* CURRENCY BAR */
+.currency-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 48px;position:sticky;top:57px;z-index:50;}
+.currency-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.currency-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+.currency-btns{display:flex;gap:6px;flex-wrap:wrap;}
+.currency-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;font-size:10px;font-family:'Cinzel',serif;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.currency-btn.active{border-color:var(--gold);color:var(--gold);}
+.currency-note{font-size:11px;color:var(--text-dim);margin-left:auto;font-family:'Cinzel',serif;}
+@media(max-width:600px){.currency-bar{padding:10px 16px;top:53px;}.currency-note{display:none;}}
+
+/* PACKAGES GRID */
+.packages-main{max-width:1200px;margin:0 auto;padding:60px 48px;}
+@media(max-width:600px){.packages-main{padding:40px 16px;}}
+
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+@media(max-width:900px){.pkg-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.pkg-grid{grid-template-columns:1fr;}}
+
+.pkg-cell{background:var(--dark2);position:relative;overflow:hidden;cursor:pointer;}
+.pkg-img{width:100%;height:260px;object-fit:cover;display:block;transition:transform .5s ease;}
+.pkg-cell:hover .pkg-img{transform:scale(1.04);}
+.pkg-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,6,0.94) 0%,rgba(8,8,6,0.3) 55%,transparent 100%);pointer-events:none;}
+.pkg-info{position:absolute;bottom:0;left:0;right:0;padding:24px 22px;}
+.pkg-badge-tag{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:7px;}
+.pkg-name-tag{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:5px;}
+.pkg-dest-tag{font-size:10.5px;color:var(--text-dim);letter-spacing:.05em;margin-bottom:12px;}
+.pkg-price-tag{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:.08em;}
+.pkg-hover-info{position:absolute;inset:0;background:rgba(8,8,6,0.9);padding:30px 24px;display:flex;flex-direction:column;justify-content:center;opacity:0;transition:opacity .3s;pointer-events:none;}
+.pkg-cell:hover .pkg-hover-info{opacity:1;pointer-events:all;}
+.pkg-hover-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);margin-bottom:16px;}
+.pkg-highlights{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.pkg-highlights li{font-size:12.5px;color:var(--text-dim);display:flex;gap:8px;align-items:flex-start;}
+.pkg-highlights li::before{content:'✦';color:var(--gold);font-size:8px;flex-shrink:0;margin-top:4px;}
+.pkg-explore{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:9px 20px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;cursor:pointer;pointer-events:all;transition:all .2s;display:inline-block;text-transform:uppercase;text-decoration:none;}
+.pkg-explore:hover{background:var(--gold);color:var(--dark);}
+
+/* CUSTOM CTA */
+.custom-cta{background:var(--surface);border:1px solid var(--border);padding:60px 48px;text-align:center;margin-top:60px;}
+.custom-cta h3{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--text);margin-bottom:12px;font-weight:300;}
+.custom-cta h3 em{color:var(--gold);font-style:italic;}
+.custom-cta p{font-size:14px;color:var(--text-dim);max-width:480px;margin:0 auto 28px;line-height:1.8;}
+.custom-cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-gold{background:var(--gold);border:none;color:var(--dark);padding:13px 32px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;cursor:pointer;text-decoration:none;text-transform:uppercase;transition:all .2s;}
+.btn-gold:hover{background:var(--gold-light);}
+.btn-outline-gold{background:transparent;border:1px solid var(--border-strong);color:var(--text-dim);padding:13px 28px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;cursor:pointer;text-decoration:none;text-transform:uppercase;transition:all .2s;}
+.btn-outline-gold:hover{border-color:var(--gold);color:var(--gold);}
+
+/* FOOTER */
+.pkg-footer{background:var(--dark2);border-top:1px solid var(--border);padding:28px 48px;margin-top:60px;}
+.pkg-footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.pkg-footer-copy{font-size:11px;color:var(--text-muted);}
+.pkg-footer-links{display:flex;gap:20px;}
+.pkg-footer-links a{font-size:11px;color:var(--text-muted);text-decoration:none;}
+.pkg-footer-links a:hover{color:var(--gold);}
+@media(max-width:600px){.pkg-footer{padding:20px 16px;}.pkg-footer-inner{flex-direction:column;}.custom-cta{padding:40px 20px;}}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">✦</div>Safar Travel</a>
+  <a href="index.html" class="nav-back">← Home</a>
+</nav>
+
+<div class="pkg-hero">
+  <div class="pkg-hero-inner">
+    <div class="pkg-eyebrow">✦ &nbsp; Curated Journeys &nbsp; ✦</div>
+    <h1 class="pkg-title">Our Signature <em>Packages</em></h1>
+    <p class="pkg-sub">Six extraordinary halal travel experiences, crafted for the discerning Muslim traveller. Every detail handled, every prayer time respected.</p>
+  </div>
+</div>
+
+<div class="currency-bar">
+  <div class="currency-bar-inner">
+    <span class="currency-label">Prices in:</span>
+    <div class="currency-btns">
+      <button class="currency-btn active" onclick="setCurrency('EUR','€',1,this)">EUR €</button>
+      <button class="currency-btn" onclick="setCurrency('GBP','£',0.86,this)">GBP £</button>
+      <button class="currency-btn" onclick="setCurrency('USD','$',1.08,this)">USD $</button>
+      <button class="currency-btn" onclick="setCurrency('TND','DT',3.35,this)">TND</button>
+      <button class="currency-btn" onclick="setCurrency('AED','AED',3.97,this)">AED</button>
+      <button class="currency-btn" onclick="setCurrency('SAR','SAR',4.05,this)">SAR</button>
+    </div>
+    <span class="currency-note" id="currencyNote">Prices shown in EUR · Land only · Per person</span>
+  </div>
+</div>
+
+<div class="packages-main">
+  <div class="pkg-grid reveal">
+
+    <div class="pkg-cell" onclick="location.href='morocco.html'">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=700&q=75" alt="Morocco" loading="lazy">
+      <div class="pkg-overlay"></div>
+      <div class="pkg-info">
+        <div class="pkg-badge-tag">Most Popular</div>
+        <div class="pkg-name-tag">Imperial Morocco</div>
+        <div class="pkg-dest-tag">Marrakech · Fes · Chefchaouen</div>
+        <div class="pkg-price-tag" data-base="2200" data-nights="7">From €2,200 / person · 7 nights</div>
+      </div>
+      <div class="pkg-hover-info">
+        <div class="pkg-hover-title">Imperial Morocco</div>
+        <ul class="pkg-highlights">
+          <li>Luxury riad accommodations</li>
+          <li>Private medina & Atlas tours</li>
+          <li>Sahara desert camp experience</li>
+          <li>Halal fine dining throughout</li>
+          <li>VIP transfers & private guides</li>
+        </ul>
+        <a href="morocco.html" class="pkg-explore" onclick="event.stopPropagation()">View Full Package ›</a>
+      </div>
+    </div>
+
+    <div class="pkg-cell" onclick="location.href='istanbul.html'">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=700&q=75" alt="Istanbul" loading="lazy">
+      <div class="pkg-overlay"></div>
+      <div class="pkg-info">
+        <div class="pkg-badge-tag">Bestseller</div>
+        <div class="pkg-name-tag">Golden Istanbul</div>
+        <div class="pkg-dest-tag">Istanbul · Cappadocia</div>
+        <div class="pkg-price-tag" data-base="1800" data-nights="6">From €1,800 / person · 6 nights</div>
+      </div>
+      <div class="pkg-hover-info">
+        <div class="pkg-hover-title">Golden Istanbul</div>
+        <ul class="pkg-highlights">
+          <li>Bosphorus-view suite hotel</li>
+          <li>Hot air balloon at sunrise</li>
+          <li>Private mosque & heritage tours</li>
+          <li>Cave hotel in Cappadocia</li>
+          <li>Grand Bazaar VIP access</li>
+        </ul>
+        <a href="istanbul.html" class="pkg-explore" onclick="event.stopPropagation()">View Full Package ›</a>
+      </div>
+    </div>
+
+    <div class="pkg-cell" onclick="location.href='maldives.html'">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=700&q=75" alt="Maldives" loading="lazy">
+      <div class="pkg-overlay"></div>
+      <div class="pkg-info">
+        <div class="pkg-badge-tag">Ultra Luxury</div>
+        <div class="pkg-name-tag">Maldives Escape</div>
+        <div class="pkg-dest-tag">North Malé · Baa Atoll</div>
+        <div class="pkg-price-tag" data-base="5500" data-nights="7">From €5,500 / person · 7 nights</div>
+      </div>
+      <div class="pkg-hover-info">
+        <div class="pkg-hover-title">Maldives Escape</div>
+        <ul class="pkg-highlights">
+          <li>Overwater villa with private deck</li>
+          <li>Seaplane transfer included</li>
+          <li>Private halal chef on request</li>
+          <li>Sunset dhow cruise</li>
+          <li>Snorkelling & spa treatments</li>
+        </ul>
+        <a href="maldives.html" class="pkg-explore" onclick="event.stopPropagation()">View Full Package ›</a>
+      </div>
+    </div>
+
+    <div class="pkg-cell" onclick="location.href='andalusia.html'">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=700&q=75" alt="Andalusia" loading="lazy">
+      <div class="pkg-overlay"></div>
+      <div class="pkg-info">
+        <div class="pkg-badge-tag">Cultural Heritage</div>
+        <div class="pkg-name-tag">Andalusia Dream</div>
+        <div class="pkg-dest-tag">Seville · Granada · Córdoba</div>
+        <div class="pkg-price-tag" data-base="2000" data-nights="8">From €2,000 / person · 8 nights</div>
+      </div>
+      <div class="pkg-hover-info">
+        <div class="pkg-hover-title">Andalusia Dream</div>
+        <ul class="pkg-highlights">
+          <li>Private Alhambra early access</li>
+          <li>Islamic heritage trail guide</li>
+          <li>Halal tapas & cuisine tours</li>
+          <li>Flamenco evening experience</li>
+          <li>Luxury parador stays</li>
+        </ul>
+        <a href="andalusia.html" class="pkg-explore" onclick="event.stopPropagation()">View Full Package ›</a>
+      </div>
+    </div>
+
+    <div class="pkg-cell" onclick="location.href='dubai.html'">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=75" alt="Dubai" loading="lazy">
+      <div class="pkg-overlay"></div>
+      <div class="pkg-info">
+        <div class="pkg-badge-tag">VIP Experience</div>
+        <div class="pkg-name-tag">Dubai Elite</div>
+        <div class="pkg-dest-tag">Dubai · Abu Dhabi</div>
+        <div class="pkg-price-tag" data-base="2800" data-nights="5">From €2,800 / person · 5 nights</div>
+      </div>
+      <div class="pkg-hover-info">
+        <div class="pkg-hover-title">Dubai Elite</div>
+        <ul class="pkg-highlights">
+          <li>Burj Al Arab class hotel</li>
+          <li>Private desert safari</li>
+          <li>Sunset yacht charter</li>
+          <li>Sheikh Zayed Mosque tour</li>
+          <li>VIP Burj Khalifa access</li>
+        </ul>
+        <a href="dubai.html" class="pkg-explore" onclick="event.stopPropagation()">View Full Package ›</a>
+      </div>
+    </div>
+
+    <div class="pkg-cell" onclick="location.href='malaysia.html'">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=700&q=75" alt="Malaysia" loading="lazy">
+      <div class="pkg-overlay"></div>
+      <div class="pkg-info">
+        <div class="pkg-badge-tag">Family Pick</div>
+        <div class="pkg-name-tag">Malaysia Explorer</div>
+        <div class="pkg-dest-tag">Kuala Lumpur · Langkawi · Penang</div>
+        <div class="pkg-price-tag" data-base="2500" data-nights="10">From €2,500 / person · 10 nights</div>
+      </div>
+      <div class="pkg-hover-info">
+        <div class="pkg-hover-title">Malaysia Explorer</div>
+        <ul class="pkg-highlights">
+          <li>Petronas Towers VIP access</li>
+          <li>Jungle & beach island resort</li>
+          <li>Private island hopping boat</li>
+          <li>Halal food tours in Penang</li>
+          <li>Malaysian cooking class</li>
+        </ul>
+        <a href="malaysia.html" class="pkg-explore" onclick="event.stopPropagation()">View Full Package ›</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CUSTOM CTA -->
+  <div class="custom-cta reveal">
+    <h3>Need a <em>Bespoke</em> Journey?</h3>
+    <p>None of our packages quite match your vision? Tell us your dream and we'll build it from scratch — any destination, any duration, any group size.</p>
+    <div class="custom-cta-btns">
+      <a href="https://wa.me/21656977718?text=Hello!%20I'd%20like%20a%20custom%20travel%20package." target="_blank" class="btn-gold">💬 WhatsApp Us</a>
+      <a href="index.html#contact" class="btn-outline-gold">Send Inquiry Form</a>
+    </div>
+  </div>
+</div>
+
+<div class="pkg-footer">
+  <div class="pkg-footer-inner">
+    <div class="pkg-footer-copy">© 2025 Safar Travel · All rights reserved</div>
+    <div class="pkg-footer-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Journal</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE_PRICES = [2200,1800,5500,2000,2800,2500];
+const NIGHTS = [7,6,7,8,5,10];
+let sym = '€', rate = 1, code = 'EUR';
+
+function setCurrency(c, s, r, btn) {
+  code=c; sym=s; rate=r;
+  document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('currencyNote').textContent = `Prices shown in ${c} · Land only · Per person`;
+  document.querySelectorAll('.pkg-price-tag').forEach((el,i) => {
+    if(BASE_PRICES[i]) el.textContent = `From ${sym}${Math.round(BASE_PRICES[i]*rate).toLocaleString()} / person · ${NIGHTS[i]} nights`;
+  });
+}
+
+function autoDetect() {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  const btns = document.querySelectorAll('.currency-btn');
+  if(tz.includes('London')||tz.includes('Dublin')) setCurrency('GBP','£',0.86,btns[1]);
+  else if(tz.includes('Riyadh')||tz.includes('Kuwait')) setCurrency('SAR','SAR',4.05,btns[5]);
+  else if(tz.includes('Dubai')||tz.includes('Abu_Dhabi')) setCurrency('AED','AED',3.97,btns[4]);
+  else if(tz.includes('Tunis')||tz.includes('Casablanca')||tz.includes('Algiers')) setCurrency('TND','DT',3.35,btns[3]);
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+window.addEventListener('load', autoDetect);
+</script>
+</body>
+</html>

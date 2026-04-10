@@ -29,12 +29,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 48px;display:fl
 nav.scrolled{background:rgba(8,8,6,0.96);backdrop-filter:blur(12px);border-bottom-color:var(--border);padding:14px 48px;}
 .nav-logo{font-family:'Cinzel',serif;font-size:16px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px;}
 .nav-logo-icon{width:28px;height:28px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
-.nav-links{display:flex;gap:36px;align-items:center;}
-.nav-links a{color:var(--text-dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:color .2s;}
-.nav-links a:hover{color:var(--gold);}
+.nav-right{display:flex;align-items:center;gap:16px;}
 .nav-cta{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:8px 20px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;cursor:pointer;text-decoration:none;transition:all .2s;text-transform:uppercase;}
 .nav-cta:hover{background:var(--gold);color:var(--dark);}
-.nav-mobile-btn{display:none;background:transparent;border:none;color:var(--gold);font-size:20px;cursor:pointer;}
+/* HAMBURGER */
+.hamburger{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:4px;z-index:201;}
+.hamburger span{display:block;width:24px;height:1.5px;background:var(--gold);transition:all .35s;}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+/* MENU OVERLAY */
+.nav-menu{position:fixed;inset:0;background:rgba(8,8,6,0.98);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;opacity:0;pointer-events:none;transition:opacity .35s;}
+.nav-menu.open{opacity:1;pointer-events:all;}
+.nav-menu a.menu-main{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);color:var(--text-dim);text-decoration:none;letter-spacing:.06em;padding:12px 0;transition:color .2s;font-weight:300;text-align:center;display:block;}
+.nav-menu a.menu-main:hover{color:var(--gold);}
+.nav-menu-divider{width:40px;height:1px;background:var(--border);margin:14px 0;}
+.nav-menu a.menu-small{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;text-decoration:none;padding:7px 0;transition:color .2s;display:block;text-align:center;}
+.nav-menu a.menu-small:hover{color:var(--gold);}
+.nav-menu-cta{margin-top:28px;background:var(--gold);color:var(--dark);padding:14px 40px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-decoration:none;text-transform:uppercase;transition:all .2s;display:inline-block;}
+.nav-menu-cta:hover{background:var(--gold-light);}
+/* remove old nav-links */
+.nav-links{display:none;}
+.nav-mobile-btn{display:none;}
 
 /* ── HERO ── */
 .hero{height:100vh;min-height:600px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -247,20 +263,31 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
 </head>
 <body>
 
+<!-- NAV MENU OVERLAY -->
+<div class="nav-menu" id="navMenu">
+  <a href="#about" class="menu-main" onclick="closeMenu()">About</a>
+  <a href="packages.html" class="menu-main" onclick="closeMenu()">Packages</a>
+  <a href="blog.html" class="menu-main" onclick="closeMenu()">Journal</a>
+  <div class="nav-menu-divider"></div>
+  <a href="#halal" class="menu-small" onclick="closeMenu()">Our Commitment</a>
+  <a href="#faq" class="menu-small" onclick="closeMenu()">FAQ</a>
+  <a href="#reviews" class="menu-small" onclick="closeMenu()">Reviews</a>
+  <a href="#contact" class="menu-small" onclick="closeMenu()">Contact</a>
+  <a href="#contact" class="nav-menu-cta" onclick="closeMenu()">Book Consultation ›</a>
+</div>
+
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo">
+  <a href="index.html" class="nav-logo">
     <div class="nav-logo-icon">✦</div>
     Safar Travel
   </a>
-  <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#packages">Packages</a>
-    <a href="#halal">Halal Promise</a>
-    <a href="#contact">Contact</a>
+  <div class="nav-right">
     <a href="#contact" class="nav-cta">Book Consultation</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-  <button class="nav-mobile-btn" onclick="this.textContent=this.textContent==='✕'?'☰':'✕'">☰</button>
 </nav>
 
 <!-- HERO -->
@@ -271,7 +298,7 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
     <h1 class="hero-title">Journey Beyond<br>the <em>Ordinary</em></h1>
     <p class="hero-sub">Bespoke halal experiences crafted for the discerning Muslim traveller.<br>Where faith, luxury, and wonder meet.</p>
     <div class="hero-btns">
-      <a href="#packages" class="btn-primary">Explore Packages</a>
+      <a href="packages.html" class="btn-primary">Explore Packages</a>
       <a href="#contact" class="btn-outline">Free Consultation</a>
     </div>
   </div>
@@ -333,158 +360,13 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 4
   </div>
 </section>
 
-<!-- DESTINATIONS STRIP -->
-<div class="dest-strip">
-  <img class="dest-strip-img" src="https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=600&q=80" alt="Morocco" loading="lazy">
-  <img class="dest-strip-img" src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80" alt="Istanbul" loading="lazy">
-  <img class="dest-strip-img" src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=600&q=80" alt="Maldives" loading="lazy">
-  <img class="dest-strip-img" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80" alt="Dubai" loading="lazy">
-  <img class="dest-strip-img" src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=600&q=80" alt="Andalusia" loading="lazy">
-</div>
-
-<!-- PACKAGES -->
-<section id="packages" class="packages-section">
-  <div class="packages-header reveal">
-    <div>
-      <div class="section-eyebrow">Curated Journeys</div>
-      <h2 class="section-title">Our <em>Signature</em> Packages</h2>
-    </div>
-    <p style="font-size:13px;color:var(--text-dim);max-width:340px;line-height:1.7;">All packages are fully customisable. Prices shown are per person, land only, excluding international flights.</p>
-  </div>
-  <div class="pkg-grid reveal">
-
-    <div class="pkg-cell" onclick="location.href='morocco.html'">
-      <img class="pkg-img" src="https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=600&q=80" alt="Morocco" loading="lazy">
-      <div class="pkg-overlay"></div>
-      <div class="pkg-info">
-        <div class="pkg-badge-tag">Most Popular</div>
-        <div class="pkg-name-tag">Imperial Morocco</div>
-        <div class="pkg-dest-tag">Marrakech · Fes · Chefchaouen</div>
-        <div class="pkg-price-tag">From €2,200 / person · 7 nights</div>
-      </div>
-      <div class="pkg-hover-info">
-        <div class="pkg-hover-title">Imperial Morocco</div>
-        <ul class="pkg-highlights">
-          <li>Luxury riad accommodations</li>
-          <li>Private medina & Atlas tours</li>
-          <li>Halal fine dining experiences</li>
-          <li>Sahara desert excursion</li>
-          <li>VIP airport transfers throughout</li>
-        </ul>
-        <button class="pkg-cta" onclick="event.stopPropagation();openChat('Imperial Morocco package')">Enquire Now ›</button>
-      </div>
-    </div>
-
-    <div class="pkg-cell" onclick="location.href='istanbul.html'">
-      <img class="pkg-img" src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80" alt="Istanbul" loading="lazy">
-      <div class="pkg-overlay"></div>
-      <div class="pkg-info">
-        <div class="pkg-badge-tag">Bestseller</div>
-        <div class="pkg-name-tag">Golden Istanbul</div>
-        <div class="pkg-dest-tag">Istanbul · Cappadocia</div>
-        <div class="pkg-price-tag">From €1,800 / person · 6 nights</div>
-      </div>
-      <div class="pkg-hover-info">
-        <div class="pkg-hover-title">Golden Istanbul</div>
-        <ul class="pkg-highlights">
-          <li>Bosphorus suite hotel</li>
-          <li>Hot air balloon over Cappadocia</li>
-          <li>Private mosque & heritage tours</li>
-          <li>Grand Bazaar VIP access</li>
-          <li>Cave hotel experience</li>
-        </ul>
-        <button class="pkg-cta" onclick="event.stopPropagation();openChat('Golden Istanbul package')">Enquire Now ›</button>
-      </div>
-    </div>
-
-    <div class="pkg-cell" onclick="location.href='maldives.html'">
-      <img class="pkg-img" src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=600&q=80" alt="Maldives" loading="lazy">
-      <div class="pkg-overlay"></div>
-      <div class="pkg-info">
-        <div class="pkg-badge-tag">Ultra Luxury</div>
-        <div class="pkg-name-tag">Maldives Escape</div>
-        <div class="pkg-dest-tag">North Malé · Baa Atoll</div>
-        <div class="pkg-price-tag">From €5,500 / person · 7 nights</div>
-      </div>
-      <div class="pkg-hover-info">
-        <div class="pkg-hover-title">Maldives Escape</div>
-        <ul class="pkg-highlights">
-          <li>Overwater villa with private deck</li>
-          <li>Private halal chef on request</li>
-          <li>Snorkelling & diving experiences</li>
-          <li>Sunset dhow cruise</li>
-          <li>Spa & wellness treatments</li>
-        </ul>
-        <button class="pkg-cta" onclick="event.stopPropagation();openChat('Maldives Escape package')">Enquire Now ›</button>
-      </div>
-    </div>
-
-    <div class="pkg-cell" onclick="location.href='andalusia.html'">
-      <img class="pkg-img" src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=600&q=80" alt="Andalusia" loading="lazy">
-      <div class="pkg-overlay"></div>
-      <div class="pkg-info">
-        <div class="pkg-badge-tag">Cultural Heritage</div>
-        <div class="pkg-name-tag">Andalusia Dream</div>
-        <div class="pkg-dest-tag">Seville · Granada · Córdoba</div>
-        <div class="pkg-price-tag">From €2,000 / person · 8 nights</div>
-      </div>
-      <div class="pkg-hover-info">
-        <div class="pkg-hover-title">Andalusia Dream</div>
-        <ul class="pkg-highlights">
-          <li>Private Alhambra access</li>
-          <li>Islamic heritage trail with guide</li>
-          <li>Halal tapas & cuisine tours</li>
-          <li>Flamenco evening experience</li>
-          <li>Luxury parador stays</li>
-        </ul>
-        <button class="pkg-cta" onclick="event.stopPropagation();openChat('Andalusia Dream package')">Enquire Now ›</button>
-      </div>
-    </div>
-
-    <div class="pkg-cell" onclick="location.href='dubai.html'">
-      <img class="pkg-img" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80" alt="Dubai" loading="lazy">
-      <div class="pkg-overlay"></div>
-      <div class="pkg-info">
-        <div class="pkg-badge-tag">VIP Experience</div>
-        <div class="pkg-name-tag">Dubai Elite</div>
-        <div class="pkg-dest-tag">Dubai · Abu Dhabi</div>
-        <div class="pkg-price-tag">From €2,800 / person · 5 nights</div>
-      </div>
-      <div class="pkg-hover-info">
-        <div class="pkg-hover-title">Dubai Elite</div>
-        <ul class="pkg-highlights">
-          <li>Burj Al Arab class upgrade</li>
-          <li>Private desert safari</li>
-          <li>Sheikh Zayed Mosque private tour</li>
-          <li>Halal fine dining & yacht charter</li>
-          <li>VIP shopping experience</li>
-        </ul>
-        <button class="pkg-cta" onclick="event.stopPropagation();openChat('Dubai Elite package')">Enquire Now ›</button>
-      </div>
-    </div>
-
-    <div class="pkg-cell" onclick="location.href='malaysia.html'">
-      <img class="pkg-img" src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=600&q=80" alt="Malaysia" loading="lazy">
-      <div class="pkg-overlay"></div>
-      <div class="pkg-info">
-        <div class="pkg-badge-tag">Family Pick</div>
-        <div class="pkg-name-tag">Malaysia Explorer</div>
-        <div class="pkg-dest-tag">Kuala Lumpur · Langkawi · Penang</div>
-        <div class="pkg-price-tag">From €2,500 / person · 10 nights</div>
-      </div>
-      <div class="pkg-hover-info">
-        <div class="pkg-hover-title">Malaysia Explorer</div>
-        <ul class="pkg-highlights">
-          <li>Jungle & island resorts</li>
-          <li>Halal street food & cooking class</li>
-          <li>Island hopping experience</li>
-          <li>Petronas Tower VIP access</li>
-          <li>Perfect for families</li>
-        </ul>
-        <button class="pkg-cta" onclick="event.stopPropagation();openChat('Malaysia Explorer package')">Enquire Now ›</button>
-      </div>
-    </div>
-
+<!-- PACKAGES TEASER -->
+<section id="packages" style="background:var(--surface);padding:80px 48px;text-align:center;border-top:1px solid var(--border);">
+  <div style="max-width:600px;margin:0 auto;">
+    <div class="section-eyebrow">Curated Journeys</div>
+    <h2 class="section-title">Our Signature <em>Packages</em></h2>
+    <p style="font-size:14px;color:var(--text-dim);line-height:1.85;margin-bottom:32px;">Six extraordinary halal travel experiences — from Moroccan riads to Maldivian overwater villas. Every detail handled, every prayer time respected.</p>
+    <a href="packages.html" style="background:var(--gold);color:var(--dark);padding:14px 36px;font-family:"Cinzel",serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:all .2s;" onmouseover="this.style.background="var(--gold-light)"" onmouseout="this.style.background="var(--gold)"">Explore All Packages ›</a>
   </div>
 </section>
 
@@ -849,6 +731,22 @@ function autoHomeCurrency(){
   else if(tz.includes('Tunis')||tz.includes('Casablanca')||tz.includes('Algiers')){const b=document.querySelector('.curr-btn:nth-child(4)');if(b)setHomeCurrency('TND','DT',3.35,b);}
 }
 
+// ── HAMBURGER MENU ──
+function toggleMenu(){
+  const menu = document.getElementById('navMenu');
+  const btn = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+}
+function closeMenu(){
+  document.getElementById('navMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Close menu on escape key
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
+
 // ── NAV SCROLL ──
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
@@ -974,10 +872,9 @@ window.submitFaq = async function() {
 };
 
 loadFirebase();
-</script>
-window.addEventListener('load',()=>{
-  autoHomeCurrency();
-});
+
+// ── LOAD ──
+window.addEventListener('load',()=>{ autoHomeCurrency(); });
 
 // ── EMAILJS ──
 (function(){
