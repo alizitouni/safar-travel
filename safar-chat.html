@@ -290,12 +290,13 @@ function listenForAdminReplies(){
 async function requestHuman(){
   if(humanMode) return;
   humanMode=true;
-  sendBtn.disabled=true;
-  sendBtn.style.opacity='0.4';
-  sendBtn.title='AI paused — human agent requested';
+  // Do NOT disable sendBtn — client still needs to type messages to the human agent
+  sendBtn.style.background='#25D366';
+  sendBtn.style.color='#fff';
+  sendBtn.title='Send message to human agent';
   document.getElementById('humanBtn').classList.add('active');
-  document.getElementById('humanTooltip').textContent='AI paused · Human requested';
-  userInput.placeholder='Type a message for our team…';
+  document.getElementById('humanTooltip').textContent='AI paused · Chatting with team';
+  userInput.placeholder='Type your message — our team will reply shortly…';
   addHumanBanner();
   if(sessionDocRef){
     await updateDoc(sessionDocRef,{humanRequested:true, status:'waiting_human', lastMessageAt:serverTimestamp()});
@@ -305,16 +306,19 @@ window.requestHuman = requestHuman;
 
 // ── SEND ──
 async function sendMessage(text){
-  if(!text.trim()||sendBtn.disabled) return;
-  // If human mode, just save message to Firebase without AI reply
+  if(!text.trim()) return;
+
+  // HUMAN MODE — send to Firebase only, no AI
   if(humanMode){
+    userInput.value='';userInput.style.height='auto';
     addMsg('user',text);
     history.push({role:'user',content:text});
     await saveFullHistory();
-    userInput.value='';userInput.style.height='auto';
     userInput.focus();
     return;
   }
+
+  if(sendBtn.disabled) return;
   sendBtn.disabled=true;
   userInput.value='';userInput.style.height='auto';
   addMsg('user',text);
@@ -322,7 +326,7 @@ async function sendMessage(text){
   await saveFullHistory();
   const typing=addTyping();
   try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('https://empty-bush-afa7.aloulouzitouni588.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSystem(),messages:history})
     });
