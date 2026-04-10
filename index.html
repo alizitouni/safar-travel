@@ -979,21 +979,71 @@ window.addEventListener('load',()=>{
   autoHomeCurrency();
 });
 
-function submitForm(){
-  const fname=document.getElementById('fname').value.trim();
-  const email=document.getElementById('femail').value.trim();
-  if(!fname||!email){alert('Please fill in your name and email.');return;}
-  const dest=document.getElementById('fdest').value;
-  const type=document.getElementById('ftype').value;
-  const budget=document.getElementById('fbudget').value;
-  const msg=document.getElementById('fmsg').value;
-  const lname=document.getElementById('lname').value.trim();
-  const waMsg=encodeURIComponent(`New Inquiry from ${fname} ${lname}\nEmail: ${email}\nDestination: ${dest||'Not specified'}\nTravel Type: ${type||'Not specified'}\nBudget: ${budget||'Not specified'}\nMessage: ${msg||'None'}`);
-  window.open(`https://wa.me/21656977718?text=${waMsg}`,'_blank');
-  document.getElementById('formSuccess').style.display='block';
-  setTimeout(()=>document.getElementById('formSuccess').style.display='none',5000);
+// ── EMAILJS ──
+(function(){
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  s.onload = () => emailjs.init('ASkbpub2K3PzOM8Tt');
+  document.head.appendChild(s);
+})();
+
+async function submitForm(){
+  const fname  = document.getElementById('fname').value.trim();
+  const lname  = document.getElementById('lname').value.trim();
+  const email  = document.getElementById('femail').value.trim();
+  const dest   = document.getElementById('fdest').value;
+  const type   = document.getElementById('ftype').value;
+  const budget = document.getElementById('fbudget').value;
+  const msg    = document.getElementById('fmsg').value.trim();
+
+  if(!fname || !email){ alert('Please fill in your name and email.'); return; }
+
+  const btn = document.querySelector('.form-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  const params = {
+    name: `${fname} ${lname}`.trim(),
+    email,
+    destination: dest   || 'Not specified',
+    type:        type   || 'Not specified',
+    budget:      budget || 'Not specified',
+    message:     msg    || 'No message provided'
+  };
+
+  try {
+    // 1. Send email
+    await emailjs.send('service_rijmnsv', 'template_20g010c', params);
+
+    // 2. Save to Firebase
+    if(window._db && window._addDoc && window._collection){
+      await window._addDoc(window._collection(window._db,'inquiries'),{
+        ...params,
+        status:'new',
+        createdAt: window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString()
+      });
+    }
+
+    // 3. Success UI
+    document.getElementById('formSuccess').style.display = 'block';
+    setTimeout(()=> document.getElementById('formSuccess').style.display='none', 6000);
+    ['fname','lname','femail','fmsg'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('fdest').value='';
+    document.getElementById('ftype').value='';
+    document.getElementById('fbudget').value='';
+
+  } catch(e){
+    // Fallback to WhatsApp
+    const waMsg = encodeURIComponent(`New Inquiry\nName: ${params.name}\nEmail: ${email}\nDestination: ${params.destination}\nType: ${params.type}\nBudget: ${params.budget}\nMessage: ${params.message}`);
+    window.open(`https://wa.me/21656977718?text=${waMsg}`,'_blank');
+    alert('Email failed — opening WhatsApp as backup.');
+  }
+
+  btn.textContent = 'Send Inquiry ›';
+  btn.disabled = false;
 }
 </script>
 
 </body>
+</html>
 </html>

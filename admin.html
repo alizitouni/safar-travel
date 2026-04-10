@@ -184,11 +184,13 @@ html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);f
     <div class="stat"><div class="stat-val" id="statToday">0</div><div class="stat-label">Today</div></div>
     <div class="stat" style="cursor:pointer;" onclick="showTab('reviews')"><div class="stat-val" id="statReviews">0</div><div class="stat-label">Pending Reviews</div></div>
     <div class="stat" style="cursor:pointer;" onclick="showTab('faqs')"><div class="stat-val" id="statFaqs">0</div><div class="stat-label">Pending FAQs</div></div>
+    <div class="stat" style="cursor:pointer;" onclick="showTab('inquiries')"><div class="stat-val" id="statInquiries">0</div><div class="stat-label">New Inquiries</div></div>
   </div>
 
   <!-- TABS -->
   <div style="display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;">
     <button class="tab-btn active" id="tab-chats" onclick="showTab('chats')">💬 Conversations</button>
+    <button class="tab-btn" id="tab-inquiries" onclick="showTab('inquiries')">📧 Inquiries</button>
     <button class="tab-btn" id="tab-reviews" onclick="showTab('reviews')">⭐ Reviews</button>
     <button class="tab-btn" id="tab-faqs" onclick="showTab('faqs')">❓ FAQs</button>
   </div>
@@ -238,6 +240,14 @@ html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);f
     </div>
     </div><!-- end panel-chats -->
 
+    <!-- INQUIRIES TAB -->
+    <div class="tab-panel" id="panel-inquiries" style="width:100%;">
+      <div class="moderation-panel">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;">Contact Form Inquiries</div>
+        <div id="inquiriesMod"><div class="empty-mod">Loading inquiries…</div></div>
+      </div>
+    </div>
+
     <!-- REVIEWS TAB -->
     <div class="tab-panel" id="panel-reviews" style="width:100%;">
       <div class="moderation-panel">
@@ -251,6 +261,21 @@ html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);f
       <div class="moderation-panel">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;">Pending Questions — answer and approve to publish</div>
         <div id="faqsMod"><div class="empty-mod">Loading questions…</div></div>
+      </div>
+    </div>
+
+    <!-- INQUIRIES TAB -->
+    <div class="tab-panel" id="panel-inquiries" style="width:100%;">
+      <div class="moderation-panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+          <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;">Contact Form Inquiries</div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="filterInquiries('all',this)" class="filter-btn active" style="font-size:10px;padding:5px 12px;">All</button>
+            <button onclick="filterInquiries('new',this)" class="filter-btn" style="font-size:10px;padding:5px 12px;">🔴 New</button>
+            <button onclick="filterInquiries('contacted',this)" class="filter-btn" style="font-size:10px;padding:5px 12px;">✅ Contacted</button>
+          </div>
+        </div>
+        <div id="inquiriesMod"><div class="empty-mod">Loading inquiries…</div></div>
       </div>
     </div>
 
@@ -354,12 +379,14 @@ function updateStats() {
 async function loadPendingCounts() {
   try {
     const { getDocs, collection, query, where } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const [revSnap, faqSnap] = await Promise.all([
+    const [revSnap, faqSnap, inqSnap] = await Promise.all([
       getDocs(query(collection(db,'reviews'), where('approved','==',false))),
-      getDocs(query(collection(db,'faqs'), where('approved','==',false)))
+      getDocs(query(collection(db,'faqs'), where('approved','==',false))),
+      getDocs(query(collection(db,'inquiries'), where('status','==','new')))
     ]);
     document.getElementById('statReviews').textContent = revSnap.size;
     document.getElementById('statFaqs').textContent = faqSnap.size;
+    document.getElementById('statInquiries').textContent = inqSnap.size;
   } catch(e){}
 }
 
@@ -487,13 +514,79 @@ document.getElementById('loginPass').addEventListener('keydown', e => {
 
 // ── TAB SWITCHING ──
 window.showTab = function(tab) {
-  ['chats','reviews','faqs'].forEach(t => {
-    document.getElementById(`panel-${t}`).classList.toggle('active', t===tab);
+  ['chats','inquiries','reviews','faqs'].forEach(t => {
+    const panel = document.getElementById(`panel-${t}`);
     const btn = document.getElementById(`tab-${t}`);
+    if(panel) panel.classList.toggle('active', t===tab);
     if(btn) btn.classList.toggle('active', t===tab);
   });
+  if(tab==='inquiries') loadInquiries();
   if(tab==='reviews') loadReviews();
   if(tab==='faqs') loadFaqs();
+};
+
+// ── INQUIRIES ──
+async function loadInquiries() {
+  const container = document.getElementById('inquiriesMod');
+  container.innerHTML = '<div class="empty-mod">Loading…</div>';
+  try {
+    const { getDocs, collection, query, orderBy, doc, updateDoc, deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const q = query(collection(db,'inquiries'), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    document.getElementById('statInquiries').textContent = snap.docs.filter(d=>d.data().status==='new').length;
+    if(snap.empty){ container.innerHTML = '<div class="empty-mod">No inquiries yet</div>'; return; }
+    container.innerHTML = '';
+    snap.forEach(d => {
+      const r = d.data();
+      const time = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString() : 'Just now';
+      const isNew = r.status === 'new';
+      const card = document.createElement('div');
+      card.className = 'mod-card';
+      card.id = `inq-${d.id}`;
+      card.style.borderLeft = isNew ? '3px solid var(--gold)' : '1px solid var(--border)';
+      card.innerHTML = `
+        <div class="mod-card-header">
+          <div>
+            <div class="mod-card-meta">${r.name} ${isNew ? '<span style="background:var(--gold);color:#0a0a0a;font-size:8px;padding:2px 6px;margin-left:6px;font-family:Cinzel,serif;letter-spacing:.08em;">NEW</span>' : ''}</div>
+            <div class="mod-card-sub">${r.email} · ${time}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div style="background:#0a0908;padding:10px 12px;"><div style="font-size:8.5px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Destination</div><div style="font-size:12px;color:var(--text);">${r.destination||'—'}</div></div>
+          <div style="background:#0a0908;padding:10px 12px;"><div style="font-size:8.5px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Travel Type</div><div style="font-size:12px;color:var(--text);">${r.type||'—'}</div></div>
+          <div style="background:#0a0908;padding:10px 12px;"><div style="font-size:8.5px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Budget</div><div style="font-size:12px;color:var(--gold);">${r.budget||'—'}</div></div>
+        </div>
+        ${r.message && r.message !== 'No message provided' ? `<div class="mod-card-text">"${r.message}"</div>` : ''}
+        <div class="mod-actions">
+          <a class="mod-approve" href="mailto:${r.email}?subject=Re: Your Safar Travel Inquiry" style="text-decoration:none;">✉ Reply by Email</a>
+          <a class="mod-approve" href="https://wa.me/21656977718?text=${encodeURIComponent(`Hello ${r.name}, thank you for your Safar Travel inquiry about ${r.destination}. I'd love to help plan your trip!`)}" target="_blank" style="text-decoration:none;background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25D366;">💬 WhatsApp</a>
+          ${isNew ? `<button class="mod-approve" style="background:rgba(201,168,76,0.1);border-color:var(--border);color:var(--gold);" onclick="markInqRead('${d.id}')">✓ Mark Read</button>` : ''}
+          <button class="mod-reject" onclick="deleteInq('${d.id}')">✕ Delete</button>
+        </div>`;
+      container.appendChild(card);
+    });
+
+    window.markInqRead = async function(id) {
+      await updateDoc(doc(db,'inquiries',id),{status:'read'});
+      loadInquiries();
+    };
+    window.deleteInq = async function(id) {
+      if(!confirm('Delete this inquiry?')) return;
+      await deleteDoc(doc(db,'inquiries',id));
+      document.getElementById(`inq-${id}`)?.remove();
+    };
+  } catch(e){ container.innerHTML = `<div class="empty-mod">Error: ${e.message}</div>`; }
+}
+
+window.filterInquiries = function(status, btn) {
+  document.querySelectorAll('#panel-inquiries .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('[id^="inq-"]').forEach(card => {
+    if(status === 'all') { card.style.display = ''; return; }
+    const isNew = card.style.borderLeft.includes('gold') || card.style.borderLeft.includes('C9A84C');
+    if(status === 'new') card.style.display = isNew ? '' : 'none';
+    if(status === 'contacted') card.style.display = !isNew ? '' : 'none';
+  });
 };
 
 // ── REVIEWS MODERATION ──
