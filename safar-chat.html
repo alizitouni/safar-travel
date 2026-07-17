@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Safar Travel · AI Concierge</title>
+<title>Safart · AI Concierge</title>
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -81,9 +85,9 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:1
 </head>
 <body>
 <header>
-  <div class="logo">✦</div>
+  <div class="logo"><img src="assets/safart-logo.png" alt="Safart" style="width:100%;height:100%;object-fit:contain;padding:4px;"></div>
   <div class="header-info">
-    <h1>Safar Travel</h1>
+    <h1>Safart</h1>
     <p id="headerSub">Luxury Halal Concierge · AI Powered</p>
   </div>
   <div class="header-actions">
@@ -105,7 +109,7 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:1
       <button id="sendBtn" onclick="sendMessage(userInput.value.trim())">➤</button>
     </div>
   </div>
-  <p class="footer-note">✦ &nbsp; SAFAR TRAVEL &nbsp;·&nbsp; PRIVATE LUXURY EXPERIENCES &nbsp;·&nbsp; <span style="color:#25D366">● LIVE</span></p>
+  <p class="footer-note">✦ &nbsp; SAFART &nbsp;·&nbsp; PRIVATE LUXURY EXPERIENCES &nbsp;·&nbsp; <span style="color:#25D366">● LIVE</span></p>
 </footer>
 
 <script type="module">
@@ -145,9 +149,9 @@ const sendBtn = document.getElementById('sendBtn');
 
 // ── LANGUAGE ──
 const LANG = {
-  en:{welcome:`Marhaba, and welcome to Safar Travel. ✦\n\nI'm Layla, your personal concierge. I craft extraordinary halal travel experiences — from Moroccan riads to Maldivian overwater villas.\n\nWho will you be travelling with, and what kind of experience are you dreaming of?`,qr:['💑 Honeymoon trip','👨‍👩‍👧 Family holiday','🌍 Cultural discovery','🏖️ Beach & relaxation','✨ See all packages'],placeholder:'Tell me about your dream journey…',agentLabel:'Layla · Safar Concierge',youLabel:'You',adminLabel:'Safar Team',humanBanner:'<strong>Human Agent Requested</strong><br>Our team will join shortly. I\'m still here to help in the meantime.',waLabel:'💬 &nbsp; WhatsApp Us Directly'},
-  fr:{welcome:`Marhaba, bienvenue chez Safar Travel. ✦\n\nJe suis Layla, votre concierge personnelle. Je crée des expériences de voyage halal extraordinaires.\n\nAvec qui voyagerez-vous et quel type d'expérience rêvez-vous?`,qr:['💑 Voyage de noces','👨‍👩‍👧 Vacances famille','🌍 Découverte culturelle','🏖️ Plage & détente','✨ Voir les forfaits'],placeholder:'Parlez-moi de votre voyage idéal…',agentLabel:'Layla · Concierge Safar',youLabel:'Vous',adminLabel:'Équipe Safar',humanBanner:'<strong>Agent Humain Demandé</strong><br>Notre équipe vous rejoindra bientôt.',waLabel:'💬 &nbsp; WhatsApp'},
-  ar:{welcome:`مرحباً بكم في سفر تراڤل ✦\n\nأنا ليلى، مستشارتكم الشخصية. أساعدكم في اكتشاف تجارب سفر فاخرة وحلال.\n\nمع من ستسافر؟ وما نوع التجربة التي تحلم بها؟`,qr:['💑 رحلة شهر العسل','👨‍👩‍👧 إجازة عائلية','🌍 استكشاف ثقافي','🏖️ الشاطئ والراحة','✨ جميع الباقات'],placeholder:'أخبرني عن رحلة أحلامك…',agentLabel:'ليلى · كونسيرج سفر',youLabel:'أنت',adminLabel:'فريق سفر',humanBanner:'<strong>طلب وكيل</strong><br>سيتواصل معك فريقنا قريباً.',waLabel:'💬 &nbsp; واتساب'}
+  en:{welcome:`Marhaba, and welcome to Safart. ✦\n\nI'm Layla, your personal concierge. I craft extraordinary halal travel experiences — from Moroccan riads to Maldivian overwater villas.\n\nWho will you be travelling with, and what kind of experience are you dreaming of?`,qr:['💑 Honeymoon trip','👨‍👩‍👧 Family holiday','🌍 Cultural discovery','🏖️ Beach & relaxation','✨ See all packages'],placeholder:'Tell me about your dream journey…',agentLabel:'Layla · Safart Concierge',youLabel:'You',adminLabel:'Safart Team',humanBanner:'<strong>Human Agent Requested</strong><br>Our team will join shortly. I\'m still here to help in the meantime.',waLabel:'💬 &nbsp; WhatsApp Us Directly'},
+  fr:{welcome:`Marhaba, bienvenue chez Safart. ✦\n\nJe suis Layla, votre concierge personnelle. Je crée des expériences de voyage halal extraordinaires.\n\nAvec qui voyagerez-vous et quel type d'expérience rêvez-vous?`,qr:['💑 Voyage de noces','👨‍👩‍👧 Vacances famille','🌍 Découverte culturelle','🏖️ Plage & détente','✨ Voir les forfaits'],placeholder:'Parlez-moi de votre voyage idéal…',agentLabel:'Layla · Concierge Safart',youLabel:'Vous',adminLabel:'Équipe Safart',humanBanner:'<strong>Agent Humain Demandé</strong><br>Notre équipe vous rejoindra bientôt.',waLabel:'💬 &nbsp; WhatsApp'},
+  ar:{welcome:`مرحباً بكم في سفرات ✦\n\nأنا ليلى، مستشارتكم الشخصية. أساعدكم في اكتشاف تجارب سفر فاخرة وحلال.\n\nمع من ستسافر؟ وما نوع التجربة التي تحلم بها؟`,qr:['💑 رحلة شهر العسل','👨‍👩‍👧 إجازة عائلية','🌍 استكشاف ثقافي','🏖️ الشاطئ والراحة','✨ جميع الباقات'],placeholder:'أخبرني عن رحلة أحلامك…',agentLabel:'ليلى · كونسيرج سفرات',youLabel:'أنت',adminLabel:'فريق سفرات',humanBanner:'<strong>طلب وكيل</strong><br>سيتواصل معك فريقنا قريباً.',waLabel:'💬 &nbsp; واتساب'}
 };
 
 function setLang(lang) {
@@ -173,7 +177,7 @@ const PACKAGES=[
 function buildSystem(){
   const pkgList=PACKAGES.map(p=>`• ${p.name} (${p.dest}, ${p.nights} nights, ${p.price})`).join('\n');
   const langInstr=currentLang==='fr'?'Respond entirely in French.':currentLang==='ar'?'Respond entirely in Arabic.':'Respond in English.';
-  return `You are Layla, AI concierge for Safar Travel — a luxury halal travel agency. Warm, refined, knowledgeable.\n\n${langInstr}\n\nPACKAGES (land only, per person, excl. flights):\n${pkgList}\n\nAPPROACH:\n1. First reply: ask 2–3 qualifying questions: travel type, interests, duration/budget.\n2. Recommend 2–3 matching packages by name with specific reasons. Quote price ranges.\n3. If they select: ask group size, dates, special needs. Describe the trip vividly.\n4. To finalize inquiry: collect name, destination, dates, group size, budget, special requests. Tell them a consultant will contact them within 24h.\n5. Custom trips: create bespoke proposal.\n\nHALAL: Weave in halal-certified dining, prayer facilities, modesty-friendly environments naturally.\nTONE: Elegant, personal, under 110 words unless describing itinerary. Never robotic. Use ✦ occasionally.`;
+  return `You are Layla, AI concierge for Safart — a luxury halal travel agency. Warm, refined, knowledgeable.\n\n${langInstr}\n\nPACKAGES (land only, per person, excl. flights):\n${pkgList}\n\nAPPROACH:\n1. First reply: ask 2–3 qualifying questions: travel type, interests, duration/budget.\n2. Recommend 2–3 matching packages by name with specific reasons. Quote price ranges.\n3. If they select: ask group size, dates, special needs. Describe the trip vividly.\n4. To finalize inquiry: collect name, destination, dates, group size, budget, special requests. Tell them a consultant will contact them within 24h.\n5. Custom trips: create bespoke proposal.\n\nHALAL: Weave in halal-certified dining, prayer facilities, modesty-friendly environments naturally.\nTONE: Elegant, personal, under 110 words unless describing itinerary. Never robotic. Use ✦ occasionally.`;
 }
 
 // ── DOM HELPERS ──
@@ -219,7 +223,7 @@ function addPackageCards(pkgs){
 function addHumanBanner(){
   const t=LANG[currentLang];
   const banner=document.createElement('div');banner.className='human-banner';
-  const waMsg=encodeURIComponent('Hello! I was chatting with the Safar Travel AI concierge and would like to speak with a consultant.');
+  const waMsg=encodeURIComponent('Hello! I was chatting with the Safart AI concierge and would like to speak with a consultant.');
   banner.innerHTML=`${t.humanBanner}<br><br><a class="wa-link" href="${WA_BASE}?text=${waMsg}" target="_blank" rel="noopener">${t.waLabel}</a>`;
   chat.appendChild(banner);chat.scrollTop=chat.scrollHeight;
 }
@@ -339,7 +343,7 @@ async function sendMessage(text){
     const toShow=detectPackages(reply,text);
     if(toShow.length>0)setTimeout(()=>addPackageCards(toShow),200);
     if(reply.toLowerCase().includes('consultant will contact')||reply.toLowerCase().includes('24h')||reply.toLowerCase().includes('whatsapp')){
-      const waMsg=encodeURIComponent('Hello! I just submitted my Safar Travel inquiry via the AI concierge.');
+      const waMsg=encodeURIComponent('Hello! I just submitted my Safart inquiry via the AI concierge.');
       setTimeout(()=>{
         const a=document.createElement('a');a.href=`${WA_BASE}?text=${waMsg}`;a.target='_blank';a.rel='noopener';a.className='wa-link';
         a.style.cssText='display:inline-flex;align-items:center;gap:6px;margin-top:6px;';

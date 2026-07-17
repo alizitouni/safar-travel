@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Safar Travel · Admin Panel</title>
+<title>Safart · Admin Panel</title>
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -147,12 +151,12 @@ html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);f
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">✦ Safar Travel</div>
+    <div class="login-logo"><img src="assets/safart-logo.png" alt="Safart" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:4px;"> Safart</div>
     <div class="login-title">Admin Panel</div>
     <div class="login-sub">Secure access · Consultants only</div>
     <div class="login-field">
       <label>Email</label>
-      <input type="email" id="loginEmail" placeholder="admin@safar.travel" autocomplete="email">
+      <input type="email" id="loginEmail" placeholder="admin@safart.com" autocomplete="email">
     </div>
     <div class="login-field">
       <label>Password</label>
@@ -167,7 +171,7 @@ html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);f
 <div id="app">
   <div class="topbar">
     <div>
-      <div class="topbar-logo">✦ Safar Travel</div>
+      <div class="topbar-logo"><img src="assets/safart-logo.png" alt="Safart" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:4px;"> Safart</div>
       <div class="topbar-sub">Admin Console · Real-time</div>
     </div>
     <div class="topbar-right">
@@ -230,7 +234,7 @@ html,body{height:100%;overflow:hidden;background:var(--dark);color:var(--text);f
         </div>
         <div id="convMessages"></div>
         <div class="reply-area">
-          <div class="reply-label">Reply as Safar Team</div>
+          <div class="reply-label">Reply as Safart Team</div>
           <div class="reply-row">
             <textarea id="adminReply" placeholder="Type your reply to the client…" rows="1"></textarea>
             <button id="sendReplyBtn" onclick="sendAdminReply()">SEND ›</button>
@@ -452,7 +456,7 @@ function renderMessages(conv) {
   msgs.forEach(msg => {
     const div = document.createElement('div');
     div.className = `cmsg ${msg.role==='user'?'user':msg.role==='admin'?'admin':'bot'}`;
-    const label = msg.role==='user'?'Client':msg.role==='admin'?'Safar Team':'Layla (AI)';
+    const label = msg.role==='user'?'Client':msg.role==='admin'?'Safart Team':'Layla (AI)';
     div.innerHTML = `<div class="cmsg-label">${label}</div><div class="cmsg-bubble">${(msg.text||'').replace(/\n/g,'<br>')}</div>`;
     container.appendChild(div);
   });
@@ -488,7 +492,7 @@ window.sendAdminReply = async function() {
 };
 
 window.openWhatsApp = function() {
-  const msg = encodeURIComponent('Hello! This is the Safar Travel team following up on your inquiry.');
+  const msg = encodeURIComponent('Hello! This is the Safart team following up on your inquiry.');
   window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`,'_blank');
 };
 
@@ -558,8 +562,8 @@ async function loadInquiries() {
         </div>
         ${r.message && r.message !== 'No message provided' ? `<div class="mod-card-text">"${r.message}"</div>` : ''}
         <div class="mod-actions">
-          <a class="mod-approve" href="mailto:${r.email}?subject=Re: Your Safar Travel Inquiry" style="text-decoration:none;">✉ Reply by Email</a>
-          <a class="mod-approve" href="https://wa.me/21656977718?text=${encodeURIComponent(`Hello ${r.name}, thank you for your Safar Travel inquiry about ${r.destination}. I'd love to help plan your trip!`)}" target="_blank" style="text-decoration:none;background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25D366;">💬 WhatsApp</a>
+          <a class="mod-approve" href="mailto:${r.email}?subject=Re: Your Safart Inquiry" style="text-decoration:none;">✉ Reply by Email</a>
+          <a class="mod-approve" href="https://wa.me/21656977718?text=${encodeURIComponent(`Hello ${r.name}, thank you for your Safart inquiry about ${r.destination}. I'd love to help plan your trip!`)}" target="_blank" style="text-decoration:none;background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25D366;">💬 WhatsApp</a>
           ${isNew ? `<button class="mod-approve" style="background:rgba(201,168,76,0.1);border-color:var(--border);color:var(--gold);" onclick="markInqRead('${d.id}')">✓ Mark Read</button>` : ''}
           <button class="mod-reject" onclick="deleteInq('${d.id}')">✕ Delete</button>
         </div>`;
